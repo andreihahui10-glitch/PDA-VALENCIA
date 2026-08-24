@@ -24,6 +24,7 @@
             padding: 0;
         }
 
+        /* PANTALLA DE LOGIN DE INICIO */
         #login-screen {
             position: fixed;
             top: 0;
@@ -70,6 +71,7 @@
             border-color: var(--accent-blue);
         }
 
+        /* CONTENIDO PRINCIPAL */
         .main-app {
             padding: 20px;
             display: none;
@@ -248,41 +250,6 @@
             margin-top: 10px;
             display: none;
         }
-
-        .calc-box {
-            background: #0f172a;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            margin-top: 15px;
-        }
-
-        .calc-total {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #38bdf8;
-            margin-bottom: 10px;
-        }
-
-        .checkbox-group {
-            max-height: 250px;
-            overflow-y: auto;
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            border-radius: 6px;
-            background: #0f172a;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .checkbox-item input {
-            width: auto;
-        }
     </style>
 </head>
 <body>
@@ -326,58 +293,43 @@
                 <small>Acceso: <strong id="logged-user">---</strong> (<span id="logged-role-badge" class="badge-role">---</span>)</small>
             </div>
             <div>
-                <span id="gov-status-header">Estado: <strong id="current-status" style="color: #dc2626;">10-10 Fuera de Servicio</strong> | </span>
+                <span id="gov-status-header">Estado: <strong id="current-status" style="color: #16a34a;">10-8 Disponible</strong> | </span>
                 <button onclick="logout()" style="background: var(--accent-red); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">Cerrar Sesión</button>
             </div>
         </div>
 
-        <!-- Navegación General -->
+        <!-- Navegación General de la PDA -->
         <div class="dept-selector">
             <button class="btn-dept active gov-only" id="nav-despacho" onclick="switchTab(event, 'tab-despacho')">🎧 Despacho y Unidades</button>
-            <button class="btn-dept gov-only" id="nav-ciudadanos" onclick="switchTab(event, 'tab-ciudadanos')">👤 Antecedentes</button>
-            <button class="btn-dept gov-only" id="nav-dgt" onclick="switchTab(event, 'tab-dgt')">🚗 DGT / Matrículas</button>
-            <button class="btn-dept gov-only" id="nav-calculadora" onclick="switchTab(event, 'tab-calculadora')">⚖️ Calculadora Penal</button>
-            <button class="btn-dept gov-only" id="nav-samu" onclick="switchTab(event, 'tab-samu')">🚑 Registro Médico</button>
+            <button class="btn-dept gov-only" id="nav-ciudadanos" onclick="switchTab(event, 'tab-ciudadanos')">👤 Base de Datos / Antecedentes</button>
             <button class="btn-dept" id="nav-penal" onclick="switchTab(event, 'tab-penal')">📜 Código Penal Oficial</button>
         </div>
 
-        <!-- PESTAÑA 1: DESPACHO Y UNIDADES -->
+        <!-- PESTAÑA 1: DESPACHO Y UNIDADES (Solo Cuerpos del Estado) -->
         <div id="tab-despacho" class="tab-content active">
             <div class="dept-selector" style="margin-bottom: 15px;">
                 <button class="btn-dept" style="background:#0f172a;" onclick="setService('PLV / CNP / GC')">🚔 Cuerpos Policiales</button>
                 <button class="btn-dept" style="background:#0f172a;" onclick="setService('Bombers València')">🚒 Bomberos</button>
                 <button class="btn-dept" style="background:#0f172a;" onclick="setService('SAMU / SVB')">🚑 Emergencias Sanitarias</button>
                 <button class="btn-dept" style="background:#0f172a;" onclick="setService('Conservación Carreteras')">🚜 Conservación / Grúa</button>
-                <button class="btn-dept" style="background:#0f172a;" onclick="setService('Operador 112')">🎧 Operador 112</button>
+                <button class="btn-dept" style="background:#0f172a;" onclick="setService('CCE 112 Dispatch')">🎧 Operador 112</button>
             </div>
 
             <div class="grid-container">
                 <div class="card">
                     <h3>Gestión de Unidad</h3>
                     <div class="form-group">
-                        <label>Indicativo de Unidad</label>
-                        <input type="text" id="unit-id" placeholder="Ej: METRO-10, SAMU-1, B-12">
+                        <label>Indicativo de Unidad (Ej: METRO-10, SAMU-1, B-12)</label>
+                        <input type="text" id="unit-id" placeholder="Ingresa tu clave de unidad">
                     </div>
 
                     <h4>Estado Operativo</h4>
                     <div class="status-grid">
-                        <button class="btn-status status-10-8" onclick="sendStatus('10-8 Disponible')">10-8 Disponible</button>
-                        <button class="btn-status status-10-23" onclick="sendStatus('10-23 En Camino')">10-23 En Camino</button>
-                        <button class="btn-status status-10-97" onclick="sendStatus('10-97 En Escena')">10-97 En Escena</button>
-                        <button class="btn-status status-10-10" onclick="sendStatus('10-10 Fuera de Servicio')">10-10 Fuera de Servicio</button>
+                        <button class="btn-status status-10-8" onclick="sendStatus('10-8 | Disponible')">10-8 Disponible</button>
+                        <button class="btn-status status-10-23" onclick="sendStatus('10-23 | En Camino')">10-23 En Camino</button>
+                        <button class="btn-status status-10-97" onclick="sendStatus('10-97 | En Escena')">10-97 En Escena</button>
+                        <button class="btn-status status-10-10" onclick="sendStatus('10-10 | Fuera de Servicio')">10-10 Fuera de Servicio</button>
                     </div>
-
-                    <h4 style="margin-top: 20px;">Unidades en Servicio Activo</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Unidad</th>
-                                <th>Cuerpo</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody id="active-units-table"></tbody>
-                    </table>
                 </div>
 
                 <div class="card">
@@ -410,7 +362,7 @@
             </div>
         </div>
 
-        <!-- PESTAÑA 2: ANTECEDENTES Y CIUDADANOS -->
+        <!-- PESTAÑA 2: ANTECEDENTES Y CIUDADANOS (Solo Cuerpos del Estado) -->
         <div id="tab-ciudadanos" class="tab-content">
             <div class="grid-container">
                 <div class="card">
@@ -449,153 +401,285 @@
                                 <th>Acción</th>
                             </tr>
                         </thead>
-                        <tbody id="citizen-table"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- PESTAÑA 3: DGT Y MATRÍCULAS -->
-        <div id="tab-dgt" class="tab-content">
-            <div class="grid-container">
-                <div class="card">
-                    <h3>Registrar Vehículo en DGT</h3>
-                    <form onsubmit="registerVehicle(event)">
-                        <div class="form-group">
-                            <label>Matrícula</label>
-                            <input type="text" id="veh-plate" required placeholder="Ej: 1234-ABC">
-                        </div>
-                        <div class="form-group">
-                            <label>Propietario (DNI o Nombre)</label>
-                            <input type="text" id="veh-owner" required placeholder="Ej: Juan_Perez">
-                        </div>
-                        <div class="form-group">
-                            <label>Modelo y Color</label>
-                            <input type="text" id="veh-model" placeholder="Ej: Mustang Rojo">
-                        </div>
-                        <div class="form-group">
-                            <label>Estado de Búsqueda / Incidencia</label>
-                            <select id="veh-status">
-                                <option value="EN REGLA">EN REGLA</option>
-                                <option value="ROBADO (BOLO)">ROBADO (BOLO)</option>
-                                <option value="SIN SEGURO">SIN SEGURO</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn-submit">Registrar Vehículo</button>
-                    </form>
-                </div>
-
-                <div class="card">
-                    <h3>Registro de Vehículos (DGT)</h3>
-                    <input type="text" class="search-box" id="search-dgt" onkeyup="searchVehicle()" placeholder="Buscar por Matrícula o Propietario...">
-                    <table>
-                        <thead>
+                        <tbody id="citizen-table">
                             <tr>
-                                <th>Matrícula</th>
-                                <th>Propietario</th>
-                                <th>Modelo/Color</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
+                                <td>Carlos_Val</td>
+                                <td>87654321B</td>
+                                <td><span style="color: var(--accent-green);">VÁLIDA</span></td>
+                                <td id="antecedents-87654321B">Sin antecedentes registrados.</td>
+                                <td><button onclick="addAntecedent('87654321B')" style="background:var(--accent-red); color:white; border:none; padding:5px 8px; border-radius:4px; cursor:pointer;">+ Antecedente</button></td>
                             </tr>
-                        </thead>
-                        <tbody id="dgt-table"></tbody>
+                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- PESTAÑA 4: CALCULADORA PENAL DE MULTAS Y PRISIÓN -->
-        <div id="tab-calculadora" class="tab-content">
-            <div class="grid-container">
-                <div class="card">
-                    <h3>Seleccionar Infracciones Cometidas</h3>
-                    <div class="checkbox-group" id="penal-checkboxes"></div>
-                </div>
-
-                <div class="card">
-                    <h3>Resumen de Condena / Multa</h3>
-                    <div class="form-group">
-                        <label>Nombre del Detenido / Infractor</label>
-                        <input type="text" id="calc-offender" placeholder="Ej: Carlos_Val">
-                    </div>
-
-                    <div class="calc-box">
-                        <div class="calc-total" id="calc-money-total">Multa Total: 0 €</div>
-                        <div class="calc-total" id="calc-time-total" style="color: var(--accent-red);">Tiempo de Prisión: 0 min</div>
-                        <p style="color: #94a3b8; font-size: 0.85em;" id="calc-articles-list">Artículos aplicados: Ninguno</p>
-                    </div>
-
-                    <button class="btn-submit" style="margin-top: 15px;" onclick="copyTicket()">Copiar Boletín de Denuncia</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- PESTAÑA 5: REGISTRO MÉDICO (SAMU / SVB) -->
-        <div id="tab-samu" class="tab-content">
-            <div class="grid-container">
-                <div class="card">
-                    <h3>Crear Ficha Médica</h3>
-                    <form onsubmit="registerMedical(event)">
-                        <div class="form-group">
-                            <label>Nombre del Paciente</label>
-                            <input type="text" id="med-name" required placeholder="Ej: Carlos_Val">
-                        </div>
-                        <div class="form-group">
-                            <label>Grupo Sanguíneo</label>
-                            <select id="med-blood">
-                                <option value="A+">A+</option>
-                                <option value="A-">A-</option>
-                                <option value="B+">B+</option>
-                                <option value="O+">O+</option>
-                                <option value="O-">O-</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Alergias / Padecimientos</label>
-                            <input type="text" id="med-allergies" placeholder="Ej: Penicilina, Asma">
-                        </div>
-                        <div class="form-group">
-                            <label>Observaciones / Parte Médico</label>
-                            <textarea id="med-notes" rows="3" placeholder="Lesiones atendidas, constantes vitales..."></textarea>
-                        </div>
-                        <button type="submit" class="btn-submit">Guardar Ficha Médica</button>
-                    </form>
-                </div>
-
-                <div class="card">
-                    <h3>Historial Clínico Sanitario</h3>
-                    <input type="text" class="search-box" id="search-med" onkeyup="searchMedical()" placeholder="Buscar Paciente...">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Paciente</th>
-                                <th>Sangre</th>
-                                <th>Alergias</th>
-                                <th>Parte Médico</th>
-                            </tr>
-                        </thead>
-                        <tbody id="med-table"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- PESTAÑA 6: CÓDIGO PENAL COMPLETO -->
+        <!-- PESTAÑA 3: CÓDIGO PENAL COMPLETO -->
         <div id="tab-penal" class="tab-content">
             <div class="card">
                 <h3>Código de Infracciones y Delitos - Normativa Oficial</h3>
-                <input type="text" class="search-box" id="search-penal" onkeyup="filterPenal()" placeholder="Buscar por artículo o delito...">
+                <input type="text" class="search-box" id="search-penal" onkeyup="filterPenal()" placeholder="Buscar por artículo o delito (Ej: 1.17, Robo, Homicidio)...">
                 
                 <table id="penal-table">
                     <thead>
                         <tr>
                             <th style="width: 10%;">Artículo</th>
-                            <th style="width: 50%;">Infracción / Delito</th>
-                            <th style="width: 20%;">Multa (€)</th>
-                            <th style="width: 20%;">Prisión (min)</th>
+                            <th style="width: 60%;">Infracción / Delito</th>
+                            <th style="width: 15%;">Multa (€)</th>
+                            <th style="width: 15%;">Puntos</th>
                         </tr>
                     </thead>
-                    <tbody id="penal-body"></tbody>
+                    <tbody>
+                        <!-- CAPÍTULO I -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO I: INFRACCIONES DE TRÁFICO</td></tr>
+                        <tr><td>1.1</td><td>Uso excesivo del claxon</td><td>60 €</td><td>0</td></tr>
+                        <tr><td>1.2</td><td>Invadir el carril contrario</td><td>150 €</td><td>0</td></tr>
+                        <tr><td>1.3</td><td>Giro indebido</td><td>100 €</td><td>1</td></tr>
+                        <tr><td>1.4</td><td>Conducir fuera de vías autorizadas</td><td>120 €</td><td>0</td></tr>
+                        <tr><td>1.5</td><td>Hacer caso omiso a indicaciones policiales</td><td>350 €</td><td>0</td></tr>
+                        <tr><td>1.6</td><td>Conducir con un vehículo en mal estado</td><td>500 €</td><td>3</td></tr>
+                        <tr><td>1.7</td><td>Estacionar en un lugar no permitido</td><td>100 €</td><td>0</td></tr>
+                        <tr><td>1.8</td><td>Estacionar en zonas para vehículos eléctricos</td><td>120 €</td><td>0</td></tr>
+                        <tr><td>1.9</td><td>Obstruir la circulación</td><td>150 €</td><td>2</td></tr>
+                        <tr><td>1.10</td><td>Obstaculizar el tráfico en un cruce</td><td>180 €</td><td>2</td></tr>
+                        <tr><td>1.11</td><td>Conducir sin documentación vehicular</td><td>400 €</td><td>2</td></tr>
+                        <tr><td>1.12</td><td>Conducir sin carnet</td><td>900 €</td><td>0</td></tr>
+                        <tr><td>1.13</td><td>Saltarse un STOP</td><td>100 €</td><td>2</td></tr>
+                        <tr><td>1.14</td><td>Saltarse un ceda el paso</td><td>100 €</td><td>2</td></tr>
+                        <tr><td>1.15</td><td>Obstaculizar un paso de cebra</td><td>150 €</td><td>2</td></tr>
+                        <tr><td>1.16</td><td>Saltarse un semáforo</td><td>150 €</td><td>2</td></tr>
+                        <tr><td>1.17</td><td>Conducción temeraria</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>1.18</td><td>Circular por zona no autorizada</td><td>150 €</td><td>2</td></tr>
+                        <tr><td>1.19</td><td>Circular sin cinturón de seguridad</td><td>100 €</td><td>2</td></tr>
+                        <tr><td>1.20</td><td>Saltarse un control policial</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>1.21</td><td>Conducir con documentos falsificados</td><td>1.000 €</td><td>0</td></tr>
+                        <tr><td>1.22</td><td>Superar límite de velocidad en poblado</td><td>450 €</td><td>2</td></tr>
+                        <tr><td>1.23</td><td>Superar limite de velocidad urbana</td><td>600 €</td><td>2</td></tr>
+                        <tr><td>1.24</td><td>Superar limite de velocidad en autopista</td><td>900 €</td><td>2</td></tr>
+                        <tr><td>1.25</td><td>Superar límite de velocidad en vías secundarias</td><td>300 €</td><td>2</td></tr>
+                        <tr><td>1.26</td><td>Conducir con un vehiculo no apto</td><td>400 €</td><td>0</td></tr>
+                        <tr><td>1.27</td><td>Adelantar en linea continua</td><td>180 €</td><td>2</td></tr>
+                        <tr><td>1.28</td><td>Conducir bajo los efectos del alcohol</td><td>600 €</td><td>12</td></tr>
+                        <tr><td>1.29</td><td>Conducir bajo efectos de drogas</td><td>600 €</td><td>12</td></tr>
+                        <tr><td>1.30</td><td>Conducir utilizando un dispositivo móvil</td><td>250 €</td><td>4</td></tr>
+                        <tr><td>1.31</td><td>Conducir sin luces</td><td>150 €</td><td>1</td></tr>
+                        <tr><td>1.32</td><td>No ceder el paso a emergencias</td><td>400 €</td><td>0</td></tr>
+                        <tr><td>1.33</td><td>Obstaculizar salida de emergencias</td><td>400 €</td><td>4</td></tr>
+                        <tr><td>1.34</td><td>Meterse en una persecución</td><td>800 €</td><td>4</td></tr>
+                        <tr><td>1.35</td><td>Conducir distraido</td><td>120 €</td><td>0</td></tr>
+                        <tr><td>1.36</td><td>Provocar un accidente</td><td>600 €</td><td>0</td></tr>
+                        <tr><td>1.37</td><td>Conducir sin matricula</td><td>250 €</td><td>3</td></tr>
+                        <tr><td>1.38</td><td>Acoso al volante</td><td>500 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO II -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO II: AGRESIONES Y ALTERACIÓN DEL ORDEN</td></tr>
+                        <tr><td>2.1</td><td>Disturbios en vía pública</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>2.2</td><td>Intento de agresión sin arma</td><td>900 €</td><td>0</td></tr>
+                        <tr><td>2.3</td><td>Intento de agresión con arma contundente</td><td>1.100 €</td><td>0</td></tr>
+                        <tr><td>2.4</td><td>Intento de agresión con arma blanca</td><td>1.300 €</td><td>0</td></tr>
+                        <tr><td>2.5</td><td>Intento de agresión con arma de fuego</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>2.6</td><td>Agresión a un ciudadano sin arma</td><td>1.800 €</td><td>0</td></tr>
+                        <tr><td>2.7</td><td>Agresión a un ciudadano con arma contundente</td><td>2.200 €</td><td>0</td></tr>
+                        <tr><td>2.8</td><td>Agresión a un ciudadano con arma blanca</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>2.9</td><td>Agresión a un ciudadano con arma de fuego</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>2.10</td><td>Falta de respeto a un ciudadano</td><td>400 €</td><td>0</td></tr>
+                        <tr><td>2.11</td><td>Amenaza verbal hacia un ciudadano</td><td>900 €</td><td>0</td></tr>
+                        <tr><td>2.12</td><td>Alteración del orden público</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>2.13</td><td>Venta ambulante sin autorización</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>2.14</td><td>Manifestación ilegal</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>2.15</td><td>Dañar mobiliario urbano</td><td>600 €</td><td>0</td></tr>
+                        <tr><td>2.16</td><td>Acoso psicológico</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>2.17</td><td>Suplantación de identidad</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>2.18</td><td>Racismo</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>2.19</td><td>Homofobia</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>2.20</td><td>Circular con la cara tapada</td><td>600 €</td><td>0</td></tr>
+                        <tr><td>2.21</td><td>Circular semidesnudo</td><td>300 €</td><td>0</td></tr>
+                        <tr><td>2.22</td><td>Negarse a identificarse</td><td>1.000 €</td><td>0</td></tr>
+                        <tr><td>2.23</td><td>Obstrucción a la justicia</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>2.24</td><td>Violar un cordón policial</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>2.25</td><td>Daños dolosos</td><td>1.800 €</td><td>0</td></tr>
+                        <tr><td>2.26</td><td>Daños imprudentes</td><td>900 €</td><td>0</td></tr>
+                        <tr><td>2.27</td><td>Violar orden de alejamiento</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>2.28</td><td>Allanamiento de morada</td><td>1.800 €</td><td>0</td></tr>
+                        <tr><td>2.29</td><td>Violar derecho de privacidad</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>2.30</td><td>Faltas de respeto a funcionario</td><td>1.000 €</td><td>0</td></tr>
+                        <tr><td>2.31</td><td>Amenaza verbal a funcionario</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>2.32</td><td>Injurias o calumnias</td><td>800 €</td><td>0</td></tr>
+                        <tr><td>2.33</td><td>Realizar chantajes</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>2.34</td><td>Organizar peleas ilegales</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>2.35</td><td>Carreras ilegales</td><td>5.000 €</td><td>0</td></tr>
+                        <tr><td>2.36</td><td>Provocar un incendio</td><td>6.000 €</td><td>0</td></tr>
+                        <tr><td>2.37</td><td>Manipulación de pruebas</td><td>8.000 €</td><td>0</td></tr>
+                        <tr><td>2.38</td><td>Uso indebido de emergencias</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>2.39</td><td>Apología del delito</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>2.40</td><td>Encubrimiento</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>2.41</td><td>Tráfico de influencias</td><td>7.500 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO III -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO III: ROBOS Y ASALTOS</td></tr>
+                        <tr><td>3.1</td><td>Robo de vehículo civil</td><td>1.800 €</td><td>0</td></tr>
+                        <tr><td>3.2</td><td>Robo de vehículo oficial</td><td>2.800 €</td><td>0</td></tr>
+                        <tr><td>3.3</td><td>Robo de establecimientos</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>3.4</td><td>Robo a gasolinera</td><td>800 €</td><td>0</td></tr>
+                        <tr><td>3.5</td><td>Robo a Tool Store</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>3.6</td><td>Robo a Tienda de Drones</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>3.7</td><td>Robo a joyería</td><td>12.000 €</td><td>0</td></tr>
+                        <tr><td>3.8</td><td>Robo al Banco de España</td><td>1.000.000 €</td><td>0</td></tr>
+                        <tr><td>3.9</td><td>Robo a un ATM</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>3.10</td><td>Robo a armería</td><td>8.000 €</td><td>0</td></tr>
+                        <tr><td>3.11</td><td>Intento de robo de establecimiento</td><td>900 €</td><td>0</td></tr>
+                        <tr><td>3.12</td><td>Intento de robo de gasolinera</td><td>400 €</td><td>0</td></tr>
+                        <tr><td>3.13</td><td>Intento de robo de Tool Store</td><td>1.750 €</td><td>0</td></tr>
+                        <tr><td>3.14</td><td>Intento de robo de Tienda de Drones</td><td>2.250 €</td><td>0</td></tr>
+                        <tr><td>3.15</td><td>Intento de robo de joyería</td><td>6.000 €</td><td>0</td></tr>
+                        <tr><td>3.16</td><td>Intento de robo del Banco de España</td><td>50.000 €</td><td>0</td></tr>
+                        <tr><td>3.17</td><td>Intento de robo de ATM</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>3.18</td><td>Intento de robo de armeria</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>3.19</td><td>Cómplice de robo (50%)</td><td>0 €</td><td>0</td></tr>
+                        <tr><td>3.20</td><td>Asalto a civil con arma blanca</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>3.21</td><td>Asalto a civil con arma de fuego</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>3.22</td><td>Asalto a ciudadano mediante fuerza</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>3.23</td><td>Asalto a funcionario público</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>3.24</td><td>Intento de asalto a funcionario</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>3.25</td><td>Hurto en via pública</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>3.26</td><td>Impago de multas</td><td>1.400 €</td><td>0</td></tr>
+                        <tr><td>3.27</td><td>Impago de deudas</td><td>1.400 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO IV -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO IV: TENENCIA DE ARMAS Y OBJETOS</td></tr>
+                        <tr><td>4.1</td><td>Posesión ilegal de arma blanca</td><td>600 €</td><td>0</td></tr>
+                        <tr><td>4.2</td><td>Exhibición de arma blanca</td><td>900 €</td><td>0</td></tr>
+                        <tr><td>4.3</td><td>Posesión ilegal de arma de bajo calibre</td><td>1.800 €</td><td>0</td></tr>
+                        <tr><td>4.4</td><td>Posesión ilegal de arma de medio calibre</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>4.5</td><td>Posesión ilegal de arma de alto calibre</td><td>6.000 €</td><td>0</td></tr>
+                        <tr><td>4.6</td><td>Exhibición de arma de bajo calibre</td><td>2.200 €</td><td>0</td></tr>
+                        <tr><td>4.7</td><td>Exhibición de arma de medio calibre</td><td>3.400 €</td><td>0</td></tr>
+                        <tr><td>4.8</td><td>Exhibición de arma de alto calibre</td><td>6.600 €</td><td>0</td></tr>
+                        <tr><td>4.9</td><td>Mal uso de un arma</td><td>2.200 €</td><td>0</td></tr>
+                        <tr><td>4.10</td><td>Posesión de herramientas de robo</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>4.11</td><td>Posesión de explosivos</td><td>18.000 €</td><td>0</td></tr>
+                        <tr><td>4.12</td><td>Posesión de munición</td><td>300 €</td><td>0</td></tr>
+                        <tr><td>4.13</td><td>Posesión de equipamiento táctico</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>4.14</td><td>Venta de armas</td><td>20.000 €</td><td>0</td></tr>
+                        <tr><td>4.15</td><td>Posesión o venta de armamento estatal</td><td>45.000 €</td><td>0</td></tr>
+                        <tr><td>4.16</td><td>Tráfico de armas</td><td>35.000 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO V -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO V: POSESIÓN Y TRÁFICO DE DIVISAS</td></tr>
+                        <tr><td>5.1</td><td>Posesión de dinero negro de 1 a 5.000 €</td><td>6.000 €</td><td>0</td></tr>
+                        <tr><td>5.2</td><td>Posesión de dinero negro de 5.001 a 10.000 €</td><td>10.000 €</td><td>0</td></tr>
+                        <tr><td>5.3</td><td>Posesión de dinero negro de 10.001 a 30.000 €</td><td>25.000 €</td><td>0</td></tr>
+                        <tr><td>5.4</td><td>Posesión de dinero negro superior a 30.000 €</td><td>45.000 €</td><td>0</td></tr>
+                        <tr><td>5.5</td><td>Blanqueo de capitales</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>5.6</td><td>Creación de dinero ilegal</td><td>9.000 €</td><td>0</td></tr>
+                        <tr><td>5.7</td><td>Tráfico de capitales</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>5.8</td><td>Posesión de objetos robados</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>5.9</td><td>Posesión de joyas robadas</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>5.10</td><td>Venta de joyas robadas</td><td>2.600 €</td><td>0</td></tr>
+                        <tr><td>5.11</td><td>Venta de objetos robados</td><td>1.600 €</td><td>0</td></tr>
+                        <tr><td>5.12</td><td>Evasión fiscal</td><td>7.700 €</td><td>0</td></tr>
+                        <tr><td>5.13</td><td>Fraude fiscal</td><td>9.900 €</td><td>0</td></tr>
+                        <tr><td>5.14</td><td>Evasión de impuestos</td><td>15.000 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO VI -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO VI: DELITOS CONTRA LA SALUD PÚBLICA</td></tr>
+                        <tr><td>6.1</td><td>Posesión de alcohol siendo menor</td><td>300 €</td><td>0</td></tr>
+                        <tr><td>6.2</td><td>Posesión de drogas siendo menor</td><td>600 €</td><td>0</td></tr>
+                        <tr><td>6.3</td><td>Venta de alcohol o drogas a menores</td><td>890 €</td><td>0</td></tr>
+                        <tr><td>6.4</td><td>Posesión de marihuana</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>6.5</td><td>Posesión de cocaína</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>6.6</td><td>Posesión de hachis (+3 g)</td><td>1.350 €</td><td>0</td></tr>
+                        <tr><td>6.7</td><td>Posesión de otras drogas</td><td>1.300 €</td><td>0</td></tr>
+                        <tr><td>6.8</td><td>Producción de marihuana</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>6.9</td><td>Producción de opio/cocaína</td><td>1.700 €</td><td>0</td></tr>
+                        <tr><td>6.10</td><td>Producción de LSD/heroína</td><td>5.525 €</td><td>0</td></tr>
+                        <tr><td>6.12</td><td>Caminar bajo efectos de drogas</td><td>500 €</td><td>0</td></tr>
+                        <tr><td>6.13</td><td>Venta de estupefacientes</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>6.14</td><td>Tráfico de drogas (+1 kg)</td><td>7.000 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO VII -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO VII: DELITOS CONTRA LA INTEGRIDAD</td></tr>
+                        <tr><td>7.1</td><td>Intento de secuestro civil con arma blanca</td><td>800 €</td><td>0</td></tr>
+                        <tr><td>7.2</td><td>Intento de secuestro civil con arma de fuego</td><td>1.600 €</td><td>0</td></tr>
+                        <tr><td>7.3</td><td>Secuestro civil con arma blanca</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>7.4</td><td>Secuestro civil con arma de fuego</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>7.5</td><td>Intento de homicidio sin arma</td><td>900 €</td><td>0</td></tr>
+                        <tr><td>7.6</td><td>Intento de homicidio con arma blanca</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>7.7</td><td>Intento de homicidio con arma de fuego</td><td>1.900 €</td><td>0</td></tr>
+                        <tr><td>7.8</td><td>Homicidio imprudente</td><td>1.100 €</td><td>0</td></tr>
+                        <tr><td>7.9</td><td>Homicidio con uso de arma</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>7.10</td><td>Homicidio con ensañamiento</td><td>9.000 €</td><td>0</td></tr>
+                        <tr><td>7.11</td><td>Homicidio con alevosía (CK)</td><td>35.000 €</td><td>0</td></tr>
+                        <tr><td>7.12</td><td>Amenaza o extorsión a ciudadano</td><td>800 €</td><td>0</td></tr>
+                        <tr><td>7.13</td><td>Amenaza o extorsión con arma</td><td>1.800 €</td><td>0</td></tr>
+                        <tr><td>7.14</td><td>Omisión de socorro</td><td>800 €</td><td>0</td></tr>
+                        <tr><td>7.15</td><td>Cooperador en intento de suicidio</td><td>800 €</td><td>0</td></tr>
+                        <tr><td>7.16</td><td>Negligencia médica con lesiones</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>7.17</td><td>Negligencia médica con muerte</td><td>7.500 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO VIII -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO VIII: DELITOS DE DOCUMENTOS Y LICENCIAS</td></tr>
+                        <tr><td>8.1</td><td>Falsificación de documentos</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>8.2</td><td>Posesión de documentos falsificados</td><td>1.800 €</td><td>0</td></tr>
+                        <tr><td>8.3</td><td>Estafa</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>8.4</td><td>Dar número de placa falso</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>8.5</td><td>Dar número de colegiado falso</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>8.6</td><td>Realizar denuncia falsa</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>8.7</td><td>Realizar falso testimonio</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>8.8</td><td>Tráfico de documentos falsificados</td><td>2.100 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO IX -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO IX: DELITOS CONTRA LA ADMINISTRACIÓN</td></tr>
+                        <tr><td>9.1</td><td>Desacato a la autoridad</td><td>300 €</td><td>0</td></tr>
+                        <tr><td>9.2</td><td>Intento de homicidio a Fiscal/Juez/Abogado</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>9.3</td><td>Homicidio de Fiscal o Juez</td><td>7.500 €</td><td>0</td></tr>
+                        <tr><td>9.3b</td><td>Homicidio con alevosía de Fiscal/Juez (CK)</td><td>50.000 €</td><td>0</td></tr>
+                        <tr><td>9.4</td><td>Atentado contra la autoridad</td><td>1.100 €</td><td>0</td></tr>
+                        <tr><td>9.5</td><td>Allanamiento de zonas privadas</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>9.6</td><td>Robo de documentos estatales</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>9.7</td><td>Hurto de documentos estatales</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>9.8</td><td>Robo a funcionario (sin fuerza)</td><td>2.250 €</td><td>0</td></tr>
+                        <tr><td>9.9</td><td>Hurto de armamento estatal</td><td>9.500 €</td><td>0</td></tr>
+                        <tr><td>9.10</td><td>Robo de armamento estatal (sin fuerza)</td><td>6.000 €</td><td>0</td></tr>
+                        <tr><td>9.11</td><td>Resistencia al arresto</td><td>850 €</td><td>0</td></tr>
+                        <tr><td>9.12</td><td>Intento de soborno a ciudadano</td><td>1.650 €</td><td>0</td></tr>
+                        <tr><td>9.13</td><td>Intento de soborno a funcionario</td><td>2.200 €</td><td>0</td></tr>
+                        <tr><td>9.14</td><td>Aceptar soborno como civil</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>9.15</td><td>Aceptar soborno como funcionario</td><td>5.600 €</td><td>0</td></tr>
+                        <tr><td>9.16</td><td>Intento de secuestro de funcionario</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>9.17</td><td>Secuestro a funcionario</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>9.18</td><td>Difamar a funcionario</td><td>1.700 €</td><td>0</td></tr>
+                        <tr><td>9.19</td><td>Corrupción</td><td>9.000 €</td><td>0</td></tr>
+                        <tr><td>9.20</td><td>Suplantación de funcionario</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>9.21</td><td>Intento de secuestro de miembro del gobierno</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>9.22</td><td>Secuestro de miembro del gobierno</td><td>7.500 €</td><td>0</td></tr>
+                        <tr><td>9.23</td><td>Atentado terrorista</td><td>150.000 €</td><td>0</td></tr>
+                        <tr><td>9.24</td><td>Huir de la justicia</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>9.25</td><td>Atentar contra la vida de múltiples oficiales</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>9.26</td><td>Desvelar secretos de Estado</td><td>15.000 €</td><td>0</td></tr>
+                        <tr><td>9.27</td><td>Obstrucción a la justicia</td><td>750 €</td><td>0</td></tr>
+                        <tr><td>9.28</td><td>Traición a la patria</td><td>7.700 €</td><td>0</td></tr>
+                        <tr><td>9.29</td><td>Venta de armamento estatal (funcionario)</td><td>15.000 €</td><td>0</td></tr>
+                        <tr><td>9.30</td><td>Intento de homicidio a funcionario con arma contundente</td><td>3.500 €</td><td>0</td></tr>
+                        <tr><td>9.31</td><td>Intento de homicidio a funcionario con arma blanca</td><td>3.700 €</td><td>0</td></tr>
+                        <tr><td>9.32</td><td>Homicidio imprudente de funcionario</td><td>3.500 €</td><td>0</td></tr>
+                        <tr><td>9.33</td><td>Homicidio con ensañamiento de funcionario</td><td>12.000 €</td><td>0</td></tr>
+                        <tr><td>9.34</td><td>Homicidio con alevosía de funcionario (CK)</td><td>40.000 €</td><td>0</td></tr>
+                        <tr><td>9.35</td><td>Dañar vehiculo estatal</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>9.36</td><td>Intento de agresión a funcionario sin arma</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>9.37</td><td>Intento de agresión a funcionario con arma contundente</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>9.38</td><td>Intento de agresión a funcionario con arma blanca</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>9.39</td><td>Intento de agresión a funcionario con arma de fuego</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>9.40</td><td>Agresión a funcionario sin arma</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>9.41</td><td>Agresión a funcionario con arma contundente</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>9.42</td><td>Agresión a funcionario con arma blanca</td><td>5.000 €</td><td>0</td></tr>
+                        <tr><td>9.43</td><td>Agresión a funcionario con arma de fuego</td><td>6.500 €</td><td>0</td></tr>
+                        <tr><td>9.44</td><td>Pertenencia a banda organizada</td><td>5.000 €</td><td>0</td></tr>
+                        <tr><td>9.45</td><td>Liderazgo de organización criminal</td><td>12.000 €</td><td>0</td></tr>
+                        <tr><td>9.46</td><td>Uso de distintivos de banda en delitos</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>9.47</td><td>Tráfico de influencias por administración</td><td>10.000 €</td><td>0</td></tr>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -605,49 +689,20 @@
         let currentRole = 'gov';
         let currentDept = "PLV / CNP / GC";
 
-        const penalData = [
-            { art: "1.1", desc: "Uso excesivo del claxon", fine: 60, jail: 0, cat: "TRÁFICO" },
-            { art: "1.17", desc: "Conducción temeraria", fine: 1200, jail: 5, cat: "TRÁFICO" },
-            { art: "1.28", desc: "Conducir bajo efectos del alcohol", fine: 600, jail: 2, cat: "TRÁFICO" },
-            { art: "2.12", desc: "Alteración del orden público", fine: 1200, jail: 5, cat: "ORDEN PÚBLICO" },
-            { art: "2.22", desc: "Negarse a identificarse", fine: 1000, jail: 3, cat: "ORDEN PÚBLICO" },
-            { art: "2.30", desc: "Faltas de respeto a agente", fine: 1000, jail: 2, cat: "ORDEN PÚBLICO" },
-            { art: "3.1", desc: "Robo de vehículo civil", fine: 1800, jail: 8, cat: "DELITOS GRAVES" },
-            { art: "3.7", desc: "Robo a joyería / Banco", fine: 12000, jail: 15, cat: "DELITOS GRAVES" },
-            { art: "4.5", desc: "Posesión de arma ilegal", fine: 6000, jail: 10, cat: "DELITOS GRAVES" }
-        ];
-
-        let db = {
-            citizens: JSON.parse(localStorage.getItem('pda_citizens')) || [{ name: "Carlos_Val", dni: "87654321B", license: "VÁLIDA", antecedents: "Sin antecedentes" }],
-            vehicles: JSON.parse(localStorage.getItem('pda_vehicles')) || [{ plate: "1234-ABC", owner: "Carlos_Val", model: "Golf Negro", status: "EN REGLA" }],
-            medicals: JSON.parse(localStorage.getItem('pda_medicals')) || [{ name: "Carlos_Val", blood: "O+", allergies: "Ninguna", notes: "Atendido por mareo leve" }],
-            incidents: JSON.parse(localStorage.getItem('pda_incidents')) || [],
-            activeUnits: JSON.parse(localStorage.getItem('pda_units')) || []
-        };
-
-        function saveData() {
-            localStorage.setItem('pda_citizens', JSON.stringify(db.citizens));
-            localStorage.setItem('pda_vehicles', JSON.stringify(db.vehicles));
-            localStorage.setItem('pda_medicals', JSON.stringify(db.medicals));
-            localStorage.setItem('pda_incidents', JSON.stringify(db.incidents));
-            localStorage.setItem('pda_units', JSON.stringify(db.activeUnits));
-        }
-
-        window.onload = function() {
-            renderCitizens();
-            renderVehicles();
-            renderMedicals();
-            renderIncidents();
-            renderPenalTable();
-            renderCalculatorCheckboxes();
-            renderActiveUnits();
-        };
-
         function selectRole(role) {
             currentRole = role;
             document.getElementById('btn-role-gov').classList.toggle('active', role === 'gov');
             document.getElementById('btn-role-cit').classList.toggle('active', role === 'cit');
-            document.getElementById('credentials-fields').style.display = (role === 'cit') ? 'none' : 'block';
+            
+            const credFields = document.getElementById('credentials-fields');
+            const errorDiv = document.getElementById('login-error');
+            errorDiv.style.display = 'none';
+
+            if (role === 'cit') {
+                credFields.style.display = 'none';
+            } else {
+                credFields.style.display = 'block';
+            }
         }
 
         function handleLogin(e) {
@@ -659,12 +714,14 @@
                 const userVal = document.getElementById('username').value.trim();
                 const passVal = document.getElementById('password').value.trim();
 
+                // Validación requerida para Cuerpos del Estado
                 if (userVal === "VALENCIAPDA" && passVal === "VALENRPESP") {
                     loginSuccess("VALENCIAPDA", "Cuerpo del Estado", "var(--accent-blue)");
                 } else {
                     errorDiv.style.display = 'block';
                 }
             } else {
+                // Acceso para Ciudadano (Sin credenciales)
                 loginSuccess("Ciudadano Anónimo", "Ciudadano", "var(--accent-yellow)");
             }
         }
@@ -695,20 +752,26 @@
         function logout() {
             document.getElementById('main-app').style.display = 'none';
             document.getElementById('login-screen').style.display = 'flex';
-        }
-
-        function switchTab(event, tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.dept-selector > .btn-dept').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('login-error').style.display = 'none';
+            selectRole('gov');
         }
 
         function openTab(tabId, btnId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.dept-selector > .btn-dept').forEach(btn => btn.classList.remove('active'));
+            
             document.getElementById(tabId).classList.add('active');
             if (btnId) document.getElementById(btnId).classList.add('active');
+        }
+
+        function switchTab(event, tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.dept-selector > .btn-dept').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
         function setService(dept) {
@@ -717,220 +780,108 @@
         }
 
         function sendStatus(status) {
-            const unit = document.getElementById('unit-id').value.trim() || "VALENCIAPDA";
+            const unit = document.getElementById('unit-id').value || "Unidad Sin Asignar";
             document.getElementById('current-status').innerText = status;
 
-            const idx = db.activeUnits.findIndex(u => u.unit === unit);
-            if (status.includes('10-10')) {
-                if (idx !== -1) db.activeUnits.splice(idx, 1);
-            } else {
-                if (idx !== -1) db.activeUnits[idx].status = status;
-                else db.activeUnits.push({ unit, dept: currentDept, status });
-            }
-            saveData();
-            renderActiveUnits();
-        }
-
-        function renderActiveUnits() {
-            const tbody = document.getElementById('active-units-table');
-            tbody.innerHTML = db.activeUnits.map(u => `
-                <tr>
-                    <td><strong>${u.unit}</strong></td>
-                    <td>${u.dept}</td>
-                    <td><span style="color: var(--accent-green);">${u.status}</span></td>
-                </tr>
-            `).join('');
+            sendDiscordWebhook(`📢 **Cambio de Estado**\n**Servicio:** ${currentDept}\n**Unidad:** ${unit}\n**Estado:** ${status}`);
         }
 
         function submitIncident(e) {
             e.preventDefault();
-            const item = {
-                type: document.getElementById('incident-type').value,
-                location: document.getElementById('incident-location').value,
-                details: document.getElementById('incident-details').value,
-                unit: document.getElementById('unit-id').value || "VALENCIAPDA",
-                dept: currentDept
-            };
-            db.incidents.unshift(item);
-            saveData();
-            renderIncidents();
-            document.getElementById('incident-form').reset();
-        }
+            const type = document.getElementById('incident-type').value;
+            const location = document.getElementById('incident-location').value;
+            const details = document.getElementById('incident-details').value;
+            const unit = document.getElementById('unit-id').value || "CCE 112";
 
-        function renderIncidents() {
-            document.getElementById('incident-feed').innerHTML = db.incidents.map(i => `
-                <div class="feed-item">
-                    <strong>[${i.type}]</strong> - ${i.location}<br>
-                    <small>${i.details} | Registrado por: ${i.unit} (${i.dept})</small>
-                </div>
-            `).join('');
+            const feed = document.getElementById('incident-feed');
+            const item = document.createElement('div');
+            item.className = 'feed-item';
+            item.innerHTML = `<strong>[${type}]</strong> - ${location}<br><small>${details} | Registrado por: ${unit} (${currentDept})</small>`;
+            feed.prepend(item);
+
+            sendDiscordWebhook(`🚨 **NUEVO AVISO DE EMERGENCIA - 112 VALENCIA** 🚨\n**Tipo:** ${type}\n**Ubicación:** ${location}\n**Detalles:** ${details}\n**Generado por:** ${unit} (${currentDept})`);
+
+            document.getElementById('incident-form').reset();
         }
 
         function registerCitizen(e) {
             e.preventDefault();
-            db.citizens.push({
-                name: document.getElementById('cit-name').value,
-                dni: document.getElementById('cit-dni').value,
-                license: document.getElementById('cit-license').value,
-                antecedents: "Sin antecedentes"
-            });
-            saveData();
-            renderCitizens();
+            const name = document.getElementById('cit-name').value;
+            const dni = document.getElementById('cit-dni').value;
+            const license = document.getElementById('cit-license').value;
+
+            const table = document.getElementById('citizen-table');
+            const row = document.createElement('tr');
+            
+            const licenseColor = license === 'VÁLIDA' ? 'var(--accent-green)' : 'var(--accent-red)';
+
+            row.innerHTML = `
+                <td>${name}</td>
+                <td>${dni}</td>
+                <td><span style="color: ${licenseColor};">${license}</span></td>
+                <td id="antecedents-${dni}">Sin antecedentes registrados.</td>
+                <td><button onclick="addAntecedent('${dni}')" style="background:var(--accent-red); color:white; border:none; padding:5px 8px; border-radius:4px; cursor:pointer;">+ Antecedente</button></td>
+            `;
+            table.appendChild(row);
+
+            sendDiscordWebhook(`👤 **NUEVO JUGADOR REGISTRADO**\n**Nombre:** ${name}\n**DNI:** ${dni}\n**Licencia:** ${license}`);
+
+            alert(`Jugador ${name} registrado con éxito.`);
             document.querySelector('#tab-ciudadanos form').reset();
         }
 
-        function renderCitizens() {
-            document.getElementById('citizen-table').innerHTML = db.citizens.map((c, i) => `
-                <tr>
-                    <td>${c.name}</td>
-                    <td>${c.dni}</td>
-                    <td><span style="color:${c.license === 'VÁLIDA' ? 'var(--accent-green)' : 'var(--accent-red)'}">${c.license}</span></td>
-                    <td>${c.antecedents}</td>
-                    <td><button onclick="addAntecedent(${i})" style="background:var(--accent-red); color:white; border:none; padding:5px; border-radius:4px; cursor:pointer;">+ Antecedente</button></td>
-                </tr>
-            `).join('');
-        }
-
-        function addAntecedent(idx) {
-            const crime = prompt("Introduce el delito o antecedente:");
+        function addAntecedent(dni) {
+            const crime = prompt("Introduce el número de artículo o descripción del delito:");
             if (crime) {
-                if (db.citizens[idx].antecedents === "Sin antecedentes") db.citizens[idx].antecedents = crime;
-                else db.citizens[idx].antecedents += `, ${crime}`;
-                saveData();
-                renderCitizens();
-            }
-        }
-
-        function registerVehicle(e) {
-            e.preventDefault();
-            db.vehicles.push({
-                plate: document.getElementById('veh-plate').value.toUpperCase(),
-                owner: document.getElementById('veh-owner').value,
-                model: document.getElementById('veh-model').value,
-                status: document.getElementById('veh-status').value
-            });
-            saveData();
-            renderVehicles();
-            document.querySelector('#tab-dgt form').reset();
-        }
-
-        function renderVehicles() {
-            document.getElementById('dgt-table').innerHTML = db.vehicles.map((v, i) => `
-                <tr>
-                    <td><strong>${v.plate}</strong></td>
-                    <td>${v.owner}</td>
-                    <td>${v.model}</td>
-                    <td><span style="color:${v.status === 'EN REGLA' ? 'var(--accent-green)' : 'var(--accent-red)'}">${v.status}</span></td>
-                    <td><button onclick="toggleVehicleStatus(${i})" style="background:var(--accent-blue); color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Cambiar Estado</button></td>
-                </tr>
-            `).join('');
-        }
-
-        function toggleVehicleStatus(i) {
-            db.vehicles[i].status = db.vehicles[i].status === 'EN REGLA' ? 'ROBADO (BOLO)' : 'EN REGLA';
-            saveData();
-            renderVehicles();
-        }
-
-        function renderCalculatorCheckboxes() {
-            document.getElementById('penal-checkboxes').innerHTML = penalData.map((item, index) => `
-                <div class="checkbox-item">
-                    <input type="checkbox" id="calc-item-${index}" onchange="updatePenaltyCalculation()">
-                    <label for="calc-item-${index}"><strong>[Art. ${item.art}]</strong> ${item.desc} (${item.fine}€ / ${item.jail}m)</label>
-                </div>
-            `).join('');
-        }
-
-        function updatePenaltyCalculation() {
-            let totalMoney = 0;
-            let totalJail = 0;
-            let appliedArts = [];
-
-            penalData.forEach((item, index) => {
-                const cb = document.getElementById(`calc-item-${index}`);
-                if (cb && cb.checked) {
-                    totalMoney += item.fine;
-                    totalJail += item.jail;
-                    appliedArts.push(`Art. ${item.art}`);
+                const cell = document.getElementById(`antecedents-${dni}`);
+                if (cell.innerText === "Sin antecedentes registrados.") {
+                    cell.innerText = crime;
+                } else {
+                    cell.innerText += `, ${crime}`;
                 }
-            });
 
-            document.getElementById('calc-money-total').innerText = `Multa Total: ${totalMoney.toLocaleString()} €`;
-            document.getElementById('calc-time-total').innerText = `Tiempo de Prisión: ${totalJail} min`;
-            document.getElementById('calc-articles-list').innerText = `Artículos aplicados: ${appliedArts.length ? appliedArts.join(', ') : 'Ninguno'}`;
-        }
-
-        function copyTicket() {
-            const offender = document.getElementById('calc-offender').value || "No especificado";
-            const money = document.getElementById('calc-money-total').innerText;
-            const time = document.getElementById('calc-time-total').innerText;
-            const arts = document.getElementById('calc-articles-list').innerText;
-
-            const ticketText = `📋 BOLETÍN DE DENUNCIA 112 VALENCIA\n- Infractor: ${offender}\n- ${money}\n- ${time}\n- ${arts}`;
-            navigator.clipboard.writeText(ticketText);
-            alert("Boletín copiado al portapapeles correctamente.");
-        }
-
-        function registerMedical(e) {
-            e.preventDefault();
-            db.medicals.push({
-                name: document.getElementById('med-name').value,
-                blood: document.getElementById('med-blood').value,
-                allergies: document.getElementById('med-allergies').value,
-                notes: document.getElementById('med-notes').value
-            });
-            saveData();
-            renderMedicals();
-            document.querySelector('#tab-samu form').reset();
-        }
-
-        function renderMedicals() {
-            document.getElementById('med-table').innerHTML = db.medicals.map(m => `
-                <tr>
-                    <td>${m.name}</td>
-                    <td><strong style="color: var(--accent-red);">${m.blood}</strong></td>
-                    <td>${m.allergies}</td>
-                    <td>${m.notes}</td>
-                </tr>
-            `).join('');
-        }
-
-        function renderPenalTable() {
-            document.getElementById('penal-body').innerHTML = penalData.map(p => `
-                <tr>
-                    <td>${p.art}</td>
-                    <td>${p.desc}</td>
-                    <td>${p.fine} €</td>
-                    <td>${p.jail} min</td>
-                </tr>
-            `).join('');
+                sendDiscordWebhook(`⚖️ **NUEVO ANTECEDENTE PENAL**\n**DNI Afectado:** ${dni}\n**Infracción:** ${crime}`);
+            }
         }
 
         function searchCitizen() {
             const input = document.getElementById('search-input').value.toLowerCase();
-            document.querySelectorAll('#citizen-table tr').forEach(row => {
-                row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
-            });
-        }
+            const rows = document.querySelectorAll('#citizen-table tr');
 
-        function searchVehicle() {
-            const input = document.getElementById('search-dgt').value.toLowerCase();
-            document.querySelectorAll('#dgt-table tr').forEach(row => {
-                row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
-            });
-        }
-
-        function searchMedical() {
-            const input = document.getElementById('search-med').value.toLowerCase();
-            document.querySelectorAll('#med-table tr').forEach(row => {
-                row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+            rows.forEach(row => {
+                const name = row.cells[0].innerText.toLowerCase();
+                const dni = row.cells[1].innerText.toLowerCase();
+                if (name.includes(input) || dni.includes(input)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
             });
         }
 
         function filterPenal() {
             const input = document.getElementById('search-penal').value.toLowerCase();
-            document.querySelectorAll('#penal-body tr').forEach(row => {
-                row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+            const rows = document.querySelectorAll('#penal-table tbody tr');
+
+            rows.forEach(row => {
+                if (row.cells.length === 1) return;
+                const text = row.innerText.toLowerCase();
+                if (text.includes(input)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        function sendDiscordWebhook(message) {
+            const webhookUrl = "TU_DISCORD_WEBHOOK_URL_AQUI"; 
+            if(webhookUrl === "TU_DISCORD_WEBHOOK_URL_AQUI") return;
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: message })
             });
         }
     </script>
