@@ -145,6 +145,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
+            margin-bottom: 25px;
         }
 
         th, td {
@@ -156,6 +157,13 @@
         th {
             background-color: #0f172a;
             color: var(--accent-blue);
+        }
+
+        .section-title {
+            color: #38bdf8;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 5px;
+            margin-top: 25px;
         }
     </style>
 </head>
@@ -170,12 +178,11 @@
     <div class="dept-selector">
         <button class="btn-dept active" onclick="switchTab('tab-despacho')">🎧 Despacho y Unidades</button>
         <button class="btn-dept" onclick="switchTab('tab-ciudadanos')">👤 Base de Datos / Antecedentes</button>
-        <button class="btn-dept" onclick="switchTab('tab-penal')">📜 Código Penal Valencia</button>
+        <button class="btn-dept" onclick="switchTab('tab-penal')">📜 Código Penal Completo</button>
     </div>
 
     <!-- PESTAÑA 1: DESPACHO Y UNIDADES -->
     <div id="tab-despacho" class="tab-content active">
-        <!-- Sub-selector de Cuerpo Operativo -->
         <div class="dept-selector" style="margin-bottom: 15px;">
             <button class="btn-dept" style="background:#0f172a;" onclick="setService('PLV / CNP / GC')">🚔 Cuerpos Policiales</button>
             <button class="btn-dept" style="background:#0f172a;" onclick="setService('Bombers València')">🚒 Bomberos</button>
@@ -185,7 +192,6 @@
         </div>
 
         <div class="grid-container">
-            <!-- Panel de Control Unidades -->
             <div class="card">
                 <h3>Gestión de Unidad</h3>
                 <div class="form-group">
@@ -202,7 +208,6 @@
                 </div>
             </div>
 
-            <!-- Panel de Reportes / Avisos 112 -->
             <div class="card">
                 <h3>Crear Registro / Alerta 112</h3>
                 <form id="incident-form" onsubmit="submitIncident(event)">
@@ -217,7 +222,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Ubicación / Zona en ERLC (Ej: Comisaría Central, Gasolinera, V-30)</label>
+                        <label>Ubicación / Zona en ERLC</label>
                         <input type="text" id="incident-location" required placeholder="Ej: Carretera Principal cerca del Taller">
                     </div>
                     <div class="form-group">
@@ -228,9 +233,7 @@
                 </form>
 
                 <h4 style="margin-top:20px;">Historial de Incidentes Activos</h4>
-                <div id="incident-feed">
-                    <!-- Se llena dinámicamente -->
-                </div>
+                <div id="incident-feed"></div>
             </div>
         </div>
     </div>
@@ -290,55 +293,236 @@
         </div>
     </div>
 
-    <!-- PESTAÑA 3: CÓDIGO PENAL -->
+    <!-- PESTAÑA 3: CÓDIGO PENAL COMPLETO -->
     <div id="tab-penal" class="tab-content">
         <div class="card">
-            <h3>Código Penal y Sanciones - Comunidad de Valencia</h3>
+            <h2>Código Penal y Reglamentos de Tráfico - Comunidad Valenciana (ERLC)</h2>
+            <p style="color: #94a3b8;">Baremo oficial de sanciones monetarias, tiempos de arresto y retirada de licencias.</p>
+
+            <h3 class="section-title">TITULO I: DELITOS Y CONTRAVENCIONES DE TRÁFICO</h3>
             <table>
                 <thead>
                     <tr>
-                        <th>Artículo / Delito</th>
-                        <th>Descripción</th>
+                        <th>Artículo</th>
+                        <th>Infracción / Delito</th>
                         <th>Multa (€)</th>
-                        <th>Tiempo de Prisión / Arresto</th>
+                        <th>Prisión (Min)</th>
+                        <th>Puntos / Licencia</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><strong>Art. 101 - Exceso de Velocidad</strong></td>
-                        <td>Superar los límites de velocidad urbanos o en autovía.</td>
-                        <td>500 €</td>
+                        <td><strong>Art. 101</strong></td>
+                        <td>Exceso de velocidad leve (hasta +30 km/h)</td>
+                        <td>300 €</td>
                         <td>N/A</td>
+                        <td>Sin efecto</td>
                     </tr>
                     <tr>
-                        <td><strong>Art. 102 - Conducción Temeraria</strong></td>
-                        <td>Poner en peligro la vida de peatones u otros vehículos.</td>
+                        <td><strong>Art. 102</strong></td>
+                        <td>Exceso de velocidad grave (+30 km/h)</td>
+                        <td>600 €</td>
+                        <td>N/A</td>
+                        <td>Suspensión Temporal</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 103</strong></td>
+                        <td>Conducción temeraria (Peligro para terceros)</td>
+                        <td>1.200 €</td>
+                        <td>2 Minutos</td>
+                        <td>Retirada de Licencia</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 104</strong></td>
+                        <td>Saltarse señales de stop, semáforos o cedas</td>
+                        <td>250 €</td>
+                        <td>N/A</td>
+                        <td>Sin efecto</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 105</strong></td>
+                        <td>Estacionamiento indebido / Bloqueo de vía</td>
+                        <td>200 €</td>
+                        <td>N/A</td>
+                        <td>Retirada con Grúa</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 106</strong></td>
+                        <td>Conducir sin licencia válida / Suspendida</td>
                         <td>1.500 €</td>
                         <td>3 Minutos</td>
+                        <td>Confiscación Vehículo</td>
                     </tr>
                     <tr>
-                        <td><strong>Art. 201 - Desobediencia a la Autoridad</strong></td>
-                        <td>No detenerse ante las señales de Policía o Guardia Civil.</td>
+                        <td><strong>Art. 107</strong></td>
+                        <td>Uso de vehículo no homologado / Modificaciones ilegales</td>
+                        <td>800 €</td>
+                        <td>N/A</td>
+                        <td>Inmovilización</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">TITULO II: DELITOS CONTRA EL ORDEN PÚBLICO Y LA AUTORIDAD</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Artículo</th>
+                        <th>Infracción / Delito</th>
+                        <th>Multa (€)</th>
+                        <th>Prisión (Min)</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Art. 201</strong></td>
+                        <td>Desobediencia / Falta de respeto a los agentes</td>
+                        <td>500 €</td>
+                        <td>1 Minuto</td>
+                        <td>Aviso previo obligado</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 202</strong></td>
+                        <td>Fuga de control policial / Persecución vehicular</td>
+                        <td>2.000 €</td>
+                        <td>4 Minutos</td>
+                        <td>Inmovilización del auto</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 203</strong></td>
+                        <td>Resistencia activa al arresto / Huida a pie</td>
                         <td>1.000 €</td>
-                        <td>2 Minutos</td>
+                        <td>3 Minutos</td>
+                        <td>Uso de Taser autorizado</td>
                     </tr>
                     <tr>
-                        <td><strong>Art. 202 - Fuga / Fuga de Arresto</strong></td>
-                        <td>Iniciar persecución evasiva ante las fuerzas de seguridad.</td>
+                        <td><strong>Art. 204</strong></td>
+                        <td>Alteración grave del orden público / Disturbios</td>
+                        <td>800 €</td>
+                        <td>2 Minutos</td>
+                        <td>Dispersión de zona</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 205</strong></td>
+                        <td>Uso indebido de la línea de emergencia 112</td>
+                        <td>600 €</td>
+                        <td>N/A</td>
+                        <td>Sanción administrativa</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 206</strong></td>
+                        <td>Usurpación de funciones (Hacerse pasar por Agente/Sanitario)</td>
                         <td>2.500 €</td>
                         <td>5 Minutos</td>
+                        <td>Arresto inmediato</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">TITULO III: DELITOS CONTRA LAS PERSONAS Y LA PROPIEDAD</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Artículo</th>
+                        <th>Infracción / Delito</th>
+                        <th>Multa (€)</th>
+                        <th>Prisión (Min)</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Art. 301</strong></td>
+                        <td>Hurto o robo de vehículo civil</td>
+                        <td>1.500 €</td>
+                        <td>3 Minutos</td>
+                        <td>Devolución a dueño</td>
                     </tr>
                     <tr>
-                        <td><strong>Art. 301 - Posesión de Armas Ilegales</strong></td>
-                        <td>Llevar armas de fuego sin la licencia correspondiente.</td>
+                        <td><strong>Art. 302</strong></td>
+                        <td>Robo de vehículo oficial (Policía, SAMU, Bomberos)</td>
+                        <td>3.500 €</td>
+                        <td>6 Minutos</td>
+                        <td>Agravante estatal</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 303</strong></td>
+                        <td>Robo a establecimiento (Joyería, Taller, Banco, etc.)</td>
+                        <td>4.000 €</td>
+                        <td>7 Minutos</td>
+                        <td>Confiscación de botín</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 304</strong></td>
+                        <td>Secuestro / Toma de rehenes</td>
+                        <td>5.000 €</td>
+                        <td>8 Minutos</td>
+                        <td>Intervención GEO/UIP</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 305</strong></td>
+                        <td>Agresión verbal o lesiones leves a civiles</td>
+                        <td>600 €</td>
+                        <td>2 Minutos</td>
+                        <td>Atención médica</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 306</strong></td>
+                        <td>Agresión con arma blanca o fuego a civiles</td>
                         <td>3.000 €</td>
                         <td>6 Minutos</td>
+                        <td>Peligro mortal</td>
                     </tr>
                     <tr>
-                        <td><strong>Art. 401 - Agresión a Agente de la Autoridad</strong></td>
-                        <td>Ataque físico o disparo a policías, bomberos o sanitarios.</td>
-                        <td>5.000 €</td>
+                        <td><strong>Art. 307</strong></td>
+                        <td>Atentado / Homicidio contra un agente o servicios de emergencia</td>
+                        <td>6.000 €</td>
                         <td>10 Minutos</td>
+                        <td>Pena Máxima ERLC</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-title">TITULO IV: ARMAS Y SUSTANCIAS ILÍCITAS</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Artículo</th>
+                        <th>Infracción / Delito</th>
+                        <th>Multa (€)</th>
+                        <th>Prisión (Min)</th>
+                        <th>Medidas Adicionales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Art. 401</strong></td>
+                        <td>Portar arma corta visible sin licencia (Pistolas)</td>
+                        <td>1.500 €</td>
+                        <td>3 Minutos</td>
+                        <td>Incautación de arma</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 402</strong></td>
+                        <td>Posesión de armamento pesado/militar (Subfusiles/Rifles)</td>
+                        <td>4.000 €</td>
+                        <td>7 Minutos</td>
+                        <td>Incautación obligatoria</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 403</strong></td>
+                        <td>Uso de arma de fuego en zona urbana (Disparos al aire)</td>
+                        <td>2.000 €</td>
+                        <td>4 Minutos</td>
+                        <td>Incautación inmediata</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 404</strong></td>
+                        <td>Tráfico o venta ilegal de armas</td>
+                        <td>5.000 €</td>
+                        <td>8 Minutos</td>
+                        <td>Clausura de punto</td>
                     </tr>
                 </tbody>
             </table>
@@ -365,7 +549,6 @@
             const unit = document.getElementById('unit-id').value || "Unidad Sin Asignar";
             document.getElementById('current-status').innerText = status;
 
-            // Envío de Webhook a Discord
             sendDiscordWebhook(`📢 **Cambio de Estado**\n**Servicio:** ${currentDept}\n**Unidad:** ${unit}\n**Estado:** ${status}`);
         }
 
@@ -382,7 +565,6 @@
             item.innerHTML = `<strong>[${type}]</strong> - ${location}<br><small>${details} | Registrado por: ${unit} (${currentDept})</small>`;
             feed.prepend(item);
 
-            // Enviar alerta al Webhook de Discord
             sendDiscordWebhook(`🚨 **NUEVO AVISO DE EMERGENCIA - 112 VALENCIA** 🚨\n**Tipo:** ${type}\n**Ubicación:** ${location}\n**Detalles:** ${details}\n**Generado por:** ${unit} (${currentDept})`);
 
             document.getElementById('incident-form').reset();
@@ -408,7 +590,6 @@
             `;
             table.appendChild(row);
 
-            // Reportar afiliación a Discord
             sendDiscordWebhook(`👤 **NUEVO JUGADOR REGISTRADO**\n**Nombre:** ${name}\n**DNI:** ${dni}\n**Licencia:** ${license}`);
 
             alert(`Jugador ${name} afiliado/registrado con éxito.`);
@@ -425,7 +606,6 @@
                     cell.innerText += `, ${crime}`;
                 }
 
-                // Reportar antecedente a Discord
                 sendDiscordWebhook(`⚖️ **NUEVO ANTECEDENTE PENAL**\n**DNI Afectado:** ${dni}\n**Infracción:** ${crime}`);
             }
         }
@@ -446,7 +626,6 @@
         }
 
         function sendDiscordWebhook(message) {
-            // Reemplaza esta URL con la Webhook de tu canal de Discord
             const webhookUrl = "TU_DISCORD_WEBHOOK_URL_AQUI"; 
             
             if(webhookUrl === "TU_DISCORD_WEBHOOK_URL_AQUI") return;
