@@ -24,7 +24,6 @@
             padding: 0;
         }
 
-        /* PANTALLA DE LOGIN */
         #login-screen {
             position: fixed;
             top: 0;
@@ -71,7 +70,6 @@
             border-color: var(--accent-blue);
         }
 
-        /* CONTENIDO PRINCIPAL */
         .main-app {
             padding: 20px;
             display: none;
@@ -250,6 +248,41 @@
             margin-top: 10px;
             display: none;
         }
+
+        .calc-box {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-top: 15px;
+        }
+
+        .calc-total {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #38bdf8;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-group {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 6px;
+            background: #0f172a;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .checkbox-item input {
+            width: auto;
+        }
     </style>
 </head>
 <body>
@@ -301,7 +334,10 @@
         <!-- Navegación General -->
         <div class="dept-selector">
             <button class="btn-dept active gov-only" id="nav-despacho" onclick="switchTab(event, 'tab-despacho')">🎧 Despacho y Unidades</button>
-            <button class="btn-dept gov-only" id="nav-ciudadanos" onclick="switchTab(event, 'tab-ciudadanos')">👤 Base de Datos / Antecedentes</button>
+            <button class="btn-dept gov-only" id="nav-ciudadanos" onclick="switchTab(event, 'tab-ciudadanos')">👤 Antecedentes</button>
+            <button class="btn-dept gov-only" id="nav-dgt" onclick="switchTab(event, 'tab-dgt')">🚗 DGT / Matrículas</button>
+            <button class="btn-dept gov-only" id="nav-calculadora" onclick="switchTab(event, 'tab-calculadora')">⚖️ Calculadora Penal</button>
+            <button class="btn-dept gov-only" id="nav-samu" onclick="switchTab(event, 'tab-samu')">🚑 Registro Médico</button>
             <button class="btn-dept" id="nav-penal" onclick="switchTab(event, 'tab-penal')">📜 Código Penal Oficial</button>
         </div>
 
@@ -319,17 +355,29 @@
                 <div class="card">
                     <h3>Gestión de Unidad</h3>
                     <div class="form-group">
-                        <label>Indicativo de Unidad (Ej: METRO-10, SAMU-1, B-12)</label>
-                        <input type="text" id="unit-id" placeholder="Ingresa tu clave de unidad">
+                        <label>Indicativo de Unidad</label>
+                        <input type="text" id="unit-id" placeholder="Ej: METRO-10, SAMU-1, B-12">
                     </div>
 
                     <h4>Estado Operativo</h4>
                     <div class="status-grid">
-                        <button class="btn-status status-10-8" onclick="sendStatus('10-8 Disponible (Entrar de Servicio)')">10-8 Disponible (Entrar de Servicio)</button>
+                        <button class="btn-status status-10-8" onclick="sendStatus('10-8 Disponible')">10-8 Disponible</button>
                         <button class="btn-status status-10-23" onclick="sendStatus('10-23 En Camino')">10-23 En Camino</button>
                         <button class="btn-status status-10-97" onclick="sendStatus('10-97 En Escena')">10-97 En Escena</button>
                         <button class="btn-status status-10-10" onclick="sendStatus('10-10 Fuera de Servicio')">10-10 Fuera de Servicio</button>
                     </div>
+
+                    <h4 style="margin-top: 20px;">Unidades en Servicio Activo</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Unidad</th>
+                                <th>Cuerpo</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="active-units-table"></tbody>
+                    </table>
                 </div>
 
                 <div class="card">
@@ -401,21 +449,138 @@
                                 <th>Acción</th>
                             </tr>
                         </thead>
-                        <tbody id="citizen-table">
-                            <tr>
-                                <td>Carlos_Val</td>
-                                <td>87654321B</td>
-                                <td><span style="color: var(--accent-green);">VÁLIDA</span></td>
-                                <td id="antecedents-87654321B">Sin antecedentes registrados.</td>
-                                <td><button onclick="addAntecedent('87654321B')" style="background:var(--accent-red); color:white; border:none; padding:5px 8px; border-radius:4px; cursor:pointer;">+ Antecedente</button></td>
-                            </tr>
-                        </tbody>
+                        <tbody id="citizen-table"></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- PESTAÑA 3: CÓDIGO PENAL COMPLETO -->
+        <!-- PESTAÑA 3: DGT Y MATRÍCULAS -->
+        <div id="tab-dgt" class="tab-content">
+            <div class="grid-container">
+                <div class="card">
+                    <h3>Registrar Vehículo en DGT</h3>
+                    <form onsubmit="registerVehicle(event)">
+                        <div class="form-group">
+                            <label>Matrícula</label>
+                            <input type="text" id="veh-plate" required placeholder="Ej: 1234-ABC">
+                        </div>
+                        <div class="form-group">
+                            <label>Propietario (DNI o Nombre)</label>
+                            <input type="text" id="veh-owner" required placeholder="Ej: Juan_Perez">
+                        </div>
+                        <div class="form-group">
+                            <label>Modelo y Color</label>
+                            <input type="text" id="veh-model" placeholder="Ej: Mustang Rojo">
+                        </div>
+                        <div class="form-group">
+                            <label>Estado de Búsqueda / Incidencia</label>
+                            <select id="veh-status">
+                                <option value="EN REGLA">EN REGLA</option>
+                                <option value="ROBADO (BOLO)">ROBADO (BOLO)</option>
+                                <option value="SIN SEGURO">SIN SEGURO</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-submit">Registrar Vehículo</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>Registro de Vehículos (DGT)</h3>
+                    <input type="text" class="search-box" id="search-dgt" onkeyup="searchVehicle()" placeholder="Buscar por Matrícula o Propietario...">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Matrícula</th>
+                                <th>Propietario</th>
+                                <th>Modelo/Color</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dgt-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA 4: CALCULADORA PENAL DE MULTAS Y PRISIÓN -->
+        <div id="tab-calculadora" class="tab-content">
+            <div class="grid-container">
+                <div class="card">
+                    <h3>Seleccionar Infracciones Cometidas</h3>
+                    <div class="checkbox-group" id="penal-checkboxes"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Resumen de Condena / Multa</h3>
+                    <div class="form-group">
+                        <label>Nombre del Detenido / Infractor</label>
+                        <input type="text" id="calc-offender" placeholder="Ej: Carlos_Val">
+                    </div>
+
+                    <div class="calc-box">
+                        <div class="calc-total" id="calc-money-total">Multa Total: 0 €</div>
+                        <div class="calc-total" id="calc-time-total" style="color: var(--accent-red);">Tiempo de Prisión: 0 min</div>
+                        <p style="color: #94a3b8; font-size: 0.85em;" id="calc-articles-list">Artículos aplicados: Ninguno</p>
+                    </div>
+
+                    <button class="btn-submit" style="margin-top: 15px;" onclick="copyTicket()">Copiar Boletín de Denuncia</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA 5: REGISTRO MÉDICO (SAMU / SVB) -->
+        <div id="tab-samu" class="tab-content">
+            <div class="grid-container">
+                <div class="card">
+                    <h3>Crear Ficha Médica</h3>
+                    <form onsubmit="registerMedical(event)">
+                        <div class="form-group">
+                            <label>Nombre del Paciente</label>
+                            <input type="text" id="med-name" required placeholder="Ej: Carlos_Val">
+                        </div>
+                        <div class="form-group">
+                            <label>Grupo Sanguíneo</label>
+                            <select id="med-blood">
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Alergias / Padecimientos</label>
+                            <input type="text" id="med-allergies" placeholder="Ej: Penicilina, Asma">
+                        </div>
+                        <div class="form-group">
+                            <label>Observaciones / Parte Médico</label>
+                            <textarea id="med-notes" rows="3" placeholder="Lesiones atendidas, constantes vitales..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">Guardar Ficha Médica</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>Historial Clínico Sanitario</h3>
+                    <input type="text" class="search-box" id="search-med" onkeyup="searchMedical()" placeholder="Buscar Paciente...">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Paciente</th>
+                                <th>Sangre</th>
+                                <th>Alergias</th>
+                                <th>Parte Médico</th>
+                            </tr>
+                        </thead>
+                        <tbody id="med-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA 6: CÓDIGO PENAL COMPLETO -->
         <div id="tab-penal" class="tab-content">
             <div class="card">
                 <h3>Código de Infracciones y Delitos - Normativa Oficial</h3>
@@ -425,20 +590,12 @@
                     <thead>
                         <tr>
                             <th style="width: 10%;">Artículo</th>
-                            <th style="width: 60%;">Infracción / Delito</th>
-                            <th style="width: 15%;">Multa (€)</th>
-                            <th style="width: 15%;">Puntos</th>
+                            <th style="width: 50%;">Infracción / Delito</th>
+                            <th style="width: 20%;">Multa (€)</th>
+                            <th style="width: 20%;">Prisión (min)</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr><td colspan="4" class="table-category-header">CAPÍTULO I: INFRACCIONES DE TRÁFICO</td></tr>
-                        <tr><td>1.1</td><td>Uso excesivo del claxon</td><td>60 €</td><td>0</td></tr>
-                        <tr><td>1.17</td><td>Conducción temeraria</td><td>1.200 €</td><td>0</td></tr>
-                        <tr><td>1.28</td><td>Conducir bajo los efectos del alcohol</td><td>600 €</td><td>12</td></tr>
-                        <tr><td colspan="4" class="table-category-header">CAPÍTULO II: AGRESIONES Y ALTERACIÓN DEL ORDEN</td></tr>
-                        <tr><td>2.12</td><td>Alteración del orden público</td><td>1.200 €</td><td>0</td></tr>
-                        <tr><td>2.30</td><td>Faltas de respeto a funcionario</td><td>1.000 €</td><td>0</td></tr>
-                    </tbody>
+                    <tbody id="penal-body"></tbody>
                 </table>
             </div>
         </div>
@@ -448,15 +605,49 @@
         let currentRole = 'gov';
         let currentDept = "PLV / CNP / GC";
 
+        const penalData = [
+            { art: "1.1", desc: "Uso excesivo del claxon", fine: 60, jail: 0, cat: "TRÁFICO" },
+            { art: "1.17", desc: "Conducción temeraria", fine: 1200, jail: 5, cat: "TRÁFICO" },
+            { art: "1.28", desc: "Conducir bajo efectos del alcohol", fine: 600, jail: 2, cat: "TRÁFICO" },
+            { art: "2.12", desc: "Alteración del orden público", fine: 1200, jail: 5, cat: "ORDEN PÚBLICO" },
+            { art: "2.22", desc: "Negarse a identificarse", fine: 1000, jail: 3, cat: "ORDEN PÚBLICO" },
+            { art: "2.30", desc: "Faltas de respeto a agente", fine: 1000, jail: 2, cat: "ORDEN PÚBLICO" },
+            { art: "3.1", desc: "Robo de vehículo civil", fine: 1800, jail: 8, cat: "DELITOS GRAVES" },
+            { art: "3.7", desc: "Robo a joyería / Banco", fine: 12000, jail: 15, cat: "DELITOS GRAVES" },
+            { art: "4.5", desc: "Posesión de arma ilegal", fine: 6000, jail: 10, cat: "DELITOS GRAVES" }
+        ];
+
+        let db = {
+            citizens: JSON.parse(localStorage.getItem('pda_citizens')) || [{ name: "Carlos_Val", dni: "87654321B", license: "VÁLIDA", antecedents: "Sin antecedentes" }],
+            vehicles: JSON.parse(localStorage.getItem('pda_vehicles')) || [{ plate: "1234-ABC", owner: "Carlos_Val", model: "Golf Negro", status: "EN REGLA" }],
+            medicals: JSON.parse(localStorage.getItem('pda_medicals')) || [{ name: "Carlos_Val", blood: "O+", allergies: "Ninguna", notes: "Atendido por mareo leve" }],
+            incidents: JSON.parse(localStorage.getItem('pda_incidents')) || [],
+            activeUnits: JSON.parse(localStorage.getItem('pda_units')) || []
+        };
+
+        function saveData() {
+            localStorage.setItem('pda_citizens', JSON.stringify(db.citizens));
+            localStorage.setItem('pda_vehicles', JSON.stringify(db.vehicles));
+            localStorage.setItem('pda_medicals', JSON.stringify(db.medicals));
+            localStorage.setItem('pda_incidents', JSON.stringify(db.incidents));
+            localStorage.setItem('pda_units', JSON.stringify(db.activeUnits));
+        }
+
+        window.onload = function() {
+            renderCitizens();
+            renderVehicles();
+            renderMedicals();
+            renderIncidents();
+            renderPenalTable();
+            renderCalculatorCheckboxes();
+            renderActiveUnits();
+        };
+
         function selectRole(role) {
             currentRole = role;
             document.getElementById('btn-role-gov').classList.toggle('active', role === 'gov');
             document.getElementById('btn-role-cit').classList.toggle('active', role === 'cit');
-            
-            const credFields = document.getElementById('credentials-fields');
-            document.getElementById('login-error').style.display = 'none';
-
-            credFields.style.display = (role === 'cit') ? 'none' : 'block';
+            document.getElementById('credentials-fields').style.display = (role === 'cit') ? 'none' : 'block';
         }
 
         function handleLogin(e) {
@@ -504,16 +695,11 @@
         function logout() {
             document.getElementById('main-app').style.display = 'none';
             document.getElementById('login-screen').style.display = 'flex';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-            document.getElementById('login-error').style.display = 'none';
-            selectRole('gov');
         }
 
         function switchTab(event, tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.dept-selector > .btn-dept').forEach(btn => btn.classList.remove('active'));
-            
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
         }
@@ -521,7 +707,6 @@
         function openTab(tabId, btnId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.dept-selector > .btn-dept').forEach(btn => btn.classList.remove('active'));
-            
             document.getElementById(tabId).classList.add('active');
             if (btnId) document.getElementById(btnId).classList.add('active');
         }
@@ -532,85 +717,219 @@
         }
 
         function sendStatus(status) {
-            const statusText = document.getElementById('current-status');
-            statusText.innerText = status;
+            const unit = document.getElementById('unit-id').value.trim() || "VALENCIAPDA";
+            document.getElementById('current-status').innerText = status;
 
-            if (status.includes('10-8') || status.includes('10-23') || status.includes('10-97')) {
-                statusText.style.color = "#16a34a";
+            const idx = db.activeUnits.findIndex(u => u.unit === unit);
+            if (status.includes('10-10')) {
+                if (idx !== -1) db.activeUnits.splice(idx, 1);
             } else {
-                statusText.style.color = "#dc2626";
+                if (idx !== -1) db.activeUnits[idx].status = status;
+                else db.activeUnits.push({ unit, dept: currentDept, status });
             }
+            saveData();
+            renderActiveUnits();
+        }
+
+        function renderActiveUnits() {
+            const tbody = document.getElementById('active-units-table');
+            tbody.innerHTML = db.activeUnits.map(u => `
+                <tr>
+                    <td><strong>${u.unit}</strong></td>
+                    <td>${u.dept}</td>
+                    <td><span style="color: var(--accent-green);">${u.status}</span></td>
+                </tr>
+            `).join('');
         }
 
         function submitIncident(e) {
             e.preventDefault();
-            const type = document.getElementById('incident-type').value;
-            const location = document.getElementById('incident-location').value;
-            const details = document.getElementById('incident-details').value;
-            const unit = document.getElementById('unit-id').value || "VALENCIAPDA";
-
-            const feed = document.getElementById('incident-feed');
-            const item = document.createElement('div');
-            item.className = 'feed-item';
-            item.innerHTML = `<strong>[${type}]</strong> - ${location}<br><small>${details} | Registrado por: ${unit} (${currentDept})</small>`;
-            feed.prepend(item);
-
+            const item = {
+                type: document.getElementById('incident-type').value,
+                location: document.getElementById('incident-location').value,
+                details: document.getElementById('incident-details').value,
+                unit: document.getElementById('unit-id').value || "VALENCIAPDA",
+                dept: currentDept
+            };
+            db.incidents.unshift(item);
+            saveData();
+            renderIncidents();
             document.getElementById('incident-form').reset();
+        }
+
+        function renderIncidents() {
+            document.getElementById('incident-feed').innerHTML = db.incidents.map(i => `
+                <div class="feed-item">
+                    <strong>[${i.type}]</strong> - ${i.location}<br>
+                    <small>${i.details} | Registrado por: ${i.unit} (${i.dept})</small>
+                </div>
+            `).join('');
         }
 
         function registerCitizen(e) {
             e.preventDefault();
-            const name = document.getElementById('cit-name').value;
-            const dni = document.getElementById('cit-dni').value;
-            const license = document.getElementById('cit-license').value;
-
-            const table = document.getElementById('citizen-table');
-            const row = document.createElement('tr');
-            
-            const licenseColor = license === 'VÁLIDA' ? 'var(--accent-green)' : 'var(--accent-red)';
-
-            row.innerHTML = `
-                <td>${name}</td>
-                <td>${dni}</td>
-                <td><span style="color: ${licenseColor};">${license}</span></td>
-                <td id="antecedents-${dni}">Sin antecedentes registrados.</td>
-                <td><button onclick="addAntecedent('${dni}')" style="background:var(--accent-red); color:white; border:none; padding:5px 8px; border-radius:4px; cursor:pointer;">+ Antecedente</button></td>
-            `;
-            table.appendChild(row);
-
-            alert(`Jugador ${name} registrado con éxito.`);
+            db.citizens.push({
+                name: document.getElementById('cit-name').value,
+                dni: document.getElementById('cit-dni').value,
+                license: document.getElementById('cit-license').value,
+                antecedents: "Sin antecedentes"
+            });
+            saveData();
+            renderCitizens();
             document.querySelector('#tab-ciudadanos form').reset();
         }
 
-        function addAntecedent(dni) {
-            const crime = prompt("Introduce el artículo o delito:");
+        function renderCitizens() {
+            document.getElementById('citizen-table').innerHTML = db.citizens.map((c, i) => `
+                <tr>
+                    <td>${c.name}</td>
+                    <td>${c.dni}</td>
+                    <td><span style="color:${c.license === 'VÁLIDA' ? 'var(--accent-green)' : 'var(--accent-red)'}">${c.license}</span></td>
+                    <td>${c.antecedents}</td>
+                    <td><button onclick="addAntecedent(${i})" style="background:var(--accent-red); color:white; border:none; padding:5px; border-radius:4px; cursor:pointer;">+ Antecedente</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function addAntecedent(idx) {
+            const crime = prompt("Introduce el delito o antecedente:");
             if (crime) {
-                const cell = document.getElementById(`antecedents-${dni}`);
-                if (cell.innerText === "Sin antecedentes registrados.") {
-                    cell.innerText = crime;
-                } else {
-                    cell.innerText += `, ${crime}`;
-                }
+                if (db.citizens[idx].antecedents === "Sin antecedentes") db.citizens[idx].antecedents = crime;
+                else db.citizens[idx].antecedents += `, ${crime}`;
+                saveData();
+                renderCitizens();
             }
+        }
+
+        function registerVehicle(e) {
+            e.preventDefault();
+            db.vehicles.push({
+                plate: document.getElementById('veh-plate').value.toUpperCase(),
+                owner: document.getElementById('veh-owner').value,
+                model: document.getElementById('veh-model').value,
+                status: document.getElementById('veh-status').value
+            });
+            saveData();
+            renderVehicles();
+            document.querySelector('#tab-dgt form').reset();
+        }
+
+        function renderVehicles() {
+            document.getElementById('dgt-table').innerHTML = db.vehicles.map((v, i) => `
+                <tr>
+                    <td><strong>${v.plate}</strong></td>
+                    <td>${v.owner}</td>
+                    <td>${v.model}</td>
+                    <td><span style="color:${v.status === 'EN REGLA' ? 'var(--accent-green)' : 'var(--accent-red)'}">${v.status}</span></td>
+                    <td><button onclick="toggleVehicleStatus(${i})" style="background:var(--accent-blue); color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Cambiar Estado</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function toggleVehicleStatus(i) {
+            db.vehicles[i].status = db.vehicles[i].status === 'EN REGLA' ? 'ROBADO (BOLO)' : 'EN REGLA';
+            saveData();
+            renderVehicles();
+        }
+
+        function renderCalculatorCheckboxes() {
+            document.getElementById('penal-checkboxes').innerHTML = penalData.map((item, index) => `
+                <div class="checkbox-item">
+                    <input type="checkbox" id="calc-item-${index}" onchange="updatePenaltyCalculation()">
+                    <label for="calc-item-${index}"><strong>[Art. ${item.art}]</strong> ${item.desc} (${item.fine}€ / ${item.jail}m)</label>
+                </div>
+            `).join('');
+        }
+
+        function updatePenaltyCalculation() {
+            let totalMoney = 0;
+            let totalJail = 0;
+            let appliedArts = [];
+
+            penalData.forEach((item, index) => {
+                const cb = document.getElementById(`calc-item-${index}`);
+                if (cb && cb.checked) {
+                    totalMoney += item.fine;
+                    totalJail += item.jail;
+                    appliedArts.push(`Art. ${item.art}`);
+                }
+            });
+
+            document.getElementById('calc-money-total').innerText = `Multa Total: ${totalMoney.toLocaleString()} €`;
+            document.getElementById('calc-time-total').innerText = `Tiempo de Prisión: ${totalJail} min`;
+            document.getElementById('calc-articles-list').innerText = `Artículos aplicados: ${appliedArts.length ? appliedArts.join(', ') : 'Ninguno'}`;
+        }
+
+        function copyTicket() {
+            const offender = document.getElementById('calc-offender').value || "No especificado";
+            const money = document.getElementById('calc-money-total').innerText;
+            const time = document.getElementById('calc-time-total').innerText;
+            const arts = document.getElementById('calc-articles-list').innerText;
+
+            const ticketText = `📋 BOLETÍN DE DENUNCIA 112 VALENCIA\n- Infractor: ${offender}\n- ${money}\n- ${time}\n- ${arts}`;
+            navigator.clipboard.writeText(ticketText);
+            alert("Boletín copiado al portapapeles correctamente.");
+        }
+
+        function registerMedical(e) {
+            e.preventDefault();
+            db.medicals.push({
+                name: document.getElementById('med-name').value,
+                blood: document.getElementById('med-blood').value,
+                allergies: document.getElementById('med-allergies').value,
+                notes: document.getElementById('med-notes').value
+            });
+            saveData();
+            renderMedicals();
+            document.querySelector('#tab-samu form').reset();
+        }
+
+        function renderMedicals() {
+            document.getElementById('med-table').innerHTML = db.medicals.map(m => `
+                <tr>
+                    <td>${m.name}</td>
+                    <td><strong style="color: var(--accent-red);">${m.blood}</strong></td>
+                    <td>${m.allergies}</td>
+                    <td>${m.notes}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPenalTable() {
+            document.getElementById('penal-body').innerHTML = penalData.map(p => `
+                <tr>
+                    <td>${p.art}</td>
+                    <td>${p.desc}</td>
+                    <td>${p.fine} €</td>
+                    <td>${p.jail} min</td>
+                </tr>
+            `).join('');
         }
 
         function searchCitizen() {
             const input = document.getElementById('search-input').value.toLowerCase();
-            const rows = document.querySelectorAll('#citizen-table tr');
+            document.querySelectorAll('#citizen-table tr').forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+            });
+        }
 
-            rows.forEach(row => {
-                const name = row.cells[0].innerText.toLowerCase();
-                const dni = row.cells[1].innerText.toLowerCase();
-                row.style.display = (name.includes(input) || dni.includes(input)) ? "" : "none";
+        function searchVehicle() {
+            const input = document.getElementById('search-dgt').value.toLowerCase();
+            document.querySelectorAll('#dgt-table tr').forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+            });
+        }
+
+        function searchMedical() {
+            const input = document.getElementById('search-med').value.toLowerCase();
+            document.querySelectorAll('#med-table tr').forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
             });
         }
 
         function filterPenal() {
             const input = document.getElementById('search-penal').value.toLowerCase();
-            const rows = document.querySelectorAll('#penal-table tbody tr');
-
-            rows.forEach(row => {
-                if (row.cells.length === 1) return;
+            document.querySelectorAll('#penal-body tr').forEach(row => {
                 row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
             });
         }
