@@ -251,7 +251,7 @@
             display: none;
         }
 
-        /* ESTILOS DEL MAPA DE ERLC Y MARCADORES */
+        /* ESTILOS DEL MAPA DE ERLC VECTORIAL Y MARCADORES */
         .map-wrapper {
             position: relative;
             width: 100%;
@@ -260,11 +260,13 @@
             border: 2px solid var(--border-color);
             border-radius: 8px;
             overflow: hidden;
-            background: #000;
+            background: #1e293b;
+            cursor: crosshair;
         }
 
-        .map-img {
+        .map-svg {
             width: 100%;
+            height: auto;
             display: block;
         }
 
@@ -273,7 +275,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(15, 23, 42, 0.9);
             padding: 4px 8px;
             border-radius: 20px;
             border: 1px solid var(--accent-green);
@@ -283,8 +285,9 @@
             cursor: grab;
             user-select: none;
             transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px rgba(22, 163, 74, 0.6);
+            box-shadow: 0 0 10px rgba(22, 163, 74, 0.8);
             z-index: 100;
+            transition: left 0.3s ease, top 0.3s ease;
         }
 
         .map-marker:active {
@@ -297,6 +300,30 @@
             background-color: #10b981;
             border-radius: 50%;
             box-shadow: 0 0 8px #10b981;
+        }
+
+        .quick-locations {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .btn-loc {
+            background: #0f172a;
+            color: #38bdf8;
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .btn-loc:hover {
+            background: var(--accent-blue);
+            color: white;
         }
     </style>
 </head>
@@ -395,7 +422,7 @@
                         </div>
                         <div class="form-group">
                             <label>Ubicación / Zona</label>
-                            <input type="text" id="incident-location" required placeholder="Ej: Gasolinera Principal / Banco ERLC">
+                            <input type="text" id="incident-location" required placeholder="Ej: Hospital / Gasolinera / Comisaría">
                         </div>
                         <div class="form-group">
                             <label>Detalles del Incidente</label>
@@ -413,20 +440,62 @@
         <!-- PESTAÑA 2: MAPA EN TIEMPO REAL ERLC -->
         <div id="tab-mapa" class="tab-content">
             <div class="card" style="text-align: center;">
-                <h3>🗺️ Mapa Táctico de Liberty County (ERLC)</h3>
+                <h3>🗺️ Mapa Táctico Vectorial de Liberty County (ERLC)</h3>
                 <p style="color: #94a3b8; font-size: 0.9em; margin-bottom: 15px;">
-                    Al ponerte en <strong>10-8 (Disponible / En Servicio)</strong>, se activará tu posición. 
-                    <br>Puedes <strong>arrastrar el punto verde</strong> para ubicar tu patrulla o unidad en el mapa.
+                    Estando en <strong>10-8 (Disponible)</strong>, pulsa directamente sobre el mapa o usa el selector para indicar tu ubicación actual (Ej: Hospital).
                 </p>
+
+                <!-- Mover rápido a ubicaciones -->
+                <div class="quick-locations">
+                    <span style="color: #94a3b8; font-size: 0.85em; align-self: center;">Mover a:</span>
+                    <button class="btn-loc" onclick="moveMarkerTo(25, 40)">🏥 Hospital</button>
+                    <button class="btn-loc" onclick="moveMarkerTo(75, 30)">🚔 Comisaría LCPD</button>
+                    <button class="btn-loc" onclick="moveMarkerTo(45, 20)">🏦 Banco de España / ERLC</button>
+                    <button class="btn-loc" onclick="moveMarkerTo(50, 70)">⛽ Gasolinera</button>
+                    <button class="btn-loc" onclick="moveMarkerTo(85, 75)">🚒 Estación Bomberos</button>
+                </div>
                 
-                <div class="map-wrapper" id="map-container">
-                    <!-- Mapa Oficial ERLC (Cargado dinámicamente) -->
-                    <img src="https://static.wikia.nocookie.net/emergency-response-liberty-county/images/b/be/ERLC_Map.png" alt="Mapa ERLC Roblox" class="map-img" onerror="this.src='https://via.placeholder.com/900x600/0f172a/ffffff?text=Cargando+Mapa+ERLC...'">
+                <div class="map-wrapper" id="map-container" onclick="clickToMoveMarker(event)">
+                    <!-- Mapa Vectorial Interactivo SVG (Garantizado sin errores de imagen) -->
+                    <svg class="map-svg" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Fondo y Terreno -->
+                        <rect width="900" height="600" fill="#0f172a"/>
+                        <path d="M 0,150 Q 200,100 450,250 T 900,200 L 900,600 L 0,600 Z" fill="#1e293b"/>
+                        <path d="M 0,0 L 300,0 L 250,120 L 0,80 Z" fill="#111827"/>
+                        
+                        <!-- Río / Agua -->
+                        <path d="M 0,350 Q 300,250 500,450 T 900,380" fill="none" stroke="#0284c7" stroke-width="25" opacity="0.6"/>
+
+                        <!-- Carreteras Principales -->
+                        <path d="M 50,0 L 50,600 M 0,300 L 900,300 M 450,0 L 450,600 M 800,0 L 800,600" stroke="#475569" stroke-width="12" fill="none"/>
+                        <path d="M 100,100 L 800,500" stroke="#334155" stroke-width="8" stroke-dasharray="10,5" fill="none"/>
+
+                        <!-- Zonas y Edificios ERLC -->
+                        <!-- Hospital -->
+                        <rect x="180" y="200" width="100" height="80" rx="8" fill="#dc2626" opacity="0.3" stroke="#dc2626" stroke-width="2"/>
+                        <text x="230" y="245" fill="#f8fafc" font-size="14" font-weight="bold" text-anchor="middle">🏥 HOSPITAL</text>
+
+                        <!-- Comisaría LCPD -->
+                        <rect x="650" y="140" width="120" height="90" rx="8" fill="#0284c7" opacity="0.3" stroke="#0284c7" stroke-width="2"/>
+                        <text x="710" y="190" fill="#f8fafc" font-size="14" font-weight="bold" text-anchor="middle">🚔 COMISARÍA</text>
+
+                        <!-- Banco -->
+                        <rect x="380" y="80" width="110" height="70" rx="8" fill="#d97706" opacity="0.3" stroke="#d97706" stroke-width="2"/>
+                        <text x="435" y="120" fill="#f8fafc" font-size="14" font-weight="bold" text-anchor="middle">🏦 BANCO</text>
+
+                        <!-- Gasolinera -->
+                        <rect x="410" y="380" width="90" height="60" rx="8" fill="#16a34a" opacity="0.3" stroke="#16a34a" stroke-width="2"/>
+                        <text x="455" y="415" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">⛽ GASOLINERA</text>
+
+                        <!-- Bomberos -->
+                        <rect x="750" y="410" width="100" height="70" rx="8" fill="#e11d48" opacity="0.3" stroke="#e11d48" stroke-width="2"/>
+                        <text x="800" y="450" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">🚒 BOMBEROS</text>
+                    </svg>
                     
                     <!-- Marcador Verde de Unidad Activa -->
-                    <div id="user-marker" class="map-marker" style="top: 50%; left: 50%; display: none;">
+                    <div id="user-marker" class="map-marker" style="top: 40%; left: 25%; display: none;">
                         <div class="green-dot"></div>
-                        <span id="marker-label">SIN-PLACA</span>
+                        <span id="marker-label">VALENCIAPDA</span>
                     </div>
                 </div>
             </div>
@@ -489,7 +558,7 @@
         <div id="tab-penal" class="tab-content">
             <div class="card">
                 <h3>Código de Infracciones y Delitos - Normativa Oficial</h3>
-                <input type="text" class="search-box" id="search-penal" onkeyup="filterPenal()" placeholder="Buscar por artículo o delito (Ej: 1.17, Robo, Homicidio)...">
+                <input type="text" class="search-box" id="search-penal" onkeyup="filterPenal()" placeholder="Buscar por artículo o delito...">
                 
                 <table id="penal-table">
                     <thead>
@@ -503,21 +572,11 @@
                     <tbody>
                         <tr><td colspan="4" class="table-category-header">CAPÍTULO I: INFRACCIONES DE TRÁFICO</td></tr>
                         <tr><td>1.1</td><td>Uso excesivo del claxon</td><td>60 €</td><td>0</td></tr>
-                        <tr><td>1.2</td><td>Invadir el carril contrario</td><td>150 €</td><td>0</td></tr>
-                        <tr><td>1.3</td><td>Giro indebido</td><td>100 €</td><td>1</td></tr>
                         <tr><td>1.17</td><td>Conducción temeraria</td><td>1.200 €</td><td>0</td></tr>
                         <tr><td>1.28</td><td>Conducir bajo los efectos del alcohol</td><td>600 €</td><td>12</td></tr>
                         <tr><td colspan="4" class="table-category-header">CAPÍTULO II: AGRESIONES Y ALTERACIÓN DEL ORDEN</td></tr>
                         <tr><td>2.12</td><td>Alteración del orden público</td><td>1.200 €</td><td>0</td></tr>
-                        <tr><td>2.22</td><td>Negarse a identificarse</td><td>1.000 €</td><td>0</td></tr>
                         <tr><td>2.30</td><td>Faltas de respeto a funcionario</td><td>1.000 €</td><td>0</td></tr>
-                        <tr><td colspan="4" class="table-category-header">CAPÍTULO III: ROBOS Y ASALTOS</td></tr>
-                        <tr><td>3.1</td><td>Robo de vehículo civil</td><td>1.800 €</td><td>0</td></tr>
-                        <tr><td>3.7</td><td>Robo a joyería</td><td>12.000 €</td><td>0</td></tr>
-                        <tr><td>3.8</td><td>Robo al Banco de España</td><td>1.000.000 €</td><td>0</td></tr>
-                        <tr><td colspan="4" class="table-category-header">CAPÍTULO IV: TENENCIA DE ARMAS Y OBJETOS</td></tr>
-                        <tr><td>4.3</td><td>Posesión ilegal de arma de bajo calibre</td><td>1.800 €</td><td>0</td></tr>
-                        <tr><td>4.5</td><td>Posesión ilegal de arma de alto calibre</td><td>6.000 €</td><td>0</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -527,7 +586,6 @@
     <script>
         let currentRole = 'gov';
         let currentDept = "PLV / CNP / GC";
-        let isDuty = false;
 
         function selectRole(role) {
             currentRole = role;
@@ -535,14 +593,9 @@
             document.getElementById('btn-role-cit').classList.toggle('active', role === 'cit');
             
             const credFields = document.getElementById('credentials-fields');
-            const errorDiv = document.getElementById('login-error');
-            errorDiv.style.display = 'none';
+            document.getElementById('login-error').style.display = 'none';
 
-            if (role === 'cit') {
-                credFields.style.display = 'none';
-            } else {
-                credFields.style.display = 'block';
-            }
+            credFields.style.display = (role === 'cit') ? 'none' : 'block';
         }
 
         function handleLogin(e) {
@@ -618,66 +671,67 @@
         }
 
         function sendStatus(status) {
-            const unit = document.getElementById('unit-id').value.trim() || "SIN-PLACA";
             const statusText = document.getElementById('current-status');
             statusText.innerText = status;
 
             const marker = document.getElementById('user-marker');
 
             if (status.includes('10-8') || status.includes('10-23') || status.includes('10-97')) {
-                isDuty = true;
                 statusText.style.color = "#16a34a";
                 marker.style.display = "flex";
                 updateMarkerLabel();
             } else {
-                isDuty = false;
                 statusText.style.color = "#dc2626";
                 marker.style.display = "none";
             }
         }
 
         function updateMarkerLabel() {
-            const unitVal = document.getElementById('unit-id').value.trim() || "PLACA-112";
+            const unitVal = document.getElementById('unit-id').value.trim() || "VALENCIAPDA";
             document.getElementById('marker-label').innerText = unitVal;
         }
 
-        /* LÓGICA DE ARRASTRAR MARCADOR EN EL MAPA */
-        const marker = document.getElementById('user-marker');
-        const mapContainer = document.getElementById('map-container');
-        let isDragging = false;
+        /* MOVER EL PUNTO VERDE EN EL MAPA */
+        function moveMarkerTo(xPercent, yPercent) {
+            const marker = document.getElementById('user-marker');
+            marker.style.left = `${xPercent}%`;
+            marker.style.top = `${yPercent}%`;
+        }
 
-        marker.addEventListener('mousedown', (e) => {
-            isDragging = true;
-        });
+        function clickToMoveMarker(e) {
+            const marker = document.getElementById('user-marker');
+            if (marker.style.display === "none") return;
 
-        window.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-
-            const rect = mapContainer.getBoundingClientRect();
-            let x = e.clientX - rect.left;
-            let y = e.clientY - rect.top;
-
-            // Limitar al contenedor del mapa
-            x = Math.max(0, Math.min(x, rect.width));
-            y = Math.max(0, Math.min(y, rect.height));
+            const rect = document.getElementById('map-container').getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
 
             const xPercent = (x / rect.width) * 100;
             const yPercent = (y / rect.height) * 100;
 
-            marker.style.left = `${xPercent}%`;
-            marker.style.top = `${yPercent}%`;
-        });
+            moveMarkerTo(xPercent, yPercent);
+        }
+
+        /* ESTRUCTURA PARA API DE ERLC (OPCIONAL SI TIENES SERVER KEY) */
+        async function fetchERLCAPI() {
+            /*
+            const serverKey = "TU_SERVER_KEY_DE_ERLC";
+            try {
+                const res = await fetch("https://api.erlc.gg/v2/server/players", {
+                    headers: { "Server-Key": serverKey }
+                });
+                const data = await res.json();
+                // Aquí podrías mapear las coordenadas del jugador a % del mapa
+            } catch(e) { console.error(e); }
+            */
+        }
 
         function submitIncident(e) {
             e.preventDefault();
             const type = document.getElementById('incident-type').value;
             const location = document.getElementById('incident-location').value;
             const details = document.getElementById('incident-details').value;
-            const unit = document.getElementById('unit-id').value || "CCE 112";
+            const unit = document.getElementById('unit-id').value || "VALENCIAPDA";
 
             const feed = document.getElementById('incident-feed');
             const item = document.createElement('div');
@@ -713,7 +767,7 @@
         }
 
         function addAntecedent(dni) {
-            const crime = prompt("Introduce la descripción o artículo del delito:");
+            const crime = prompt("Introduce el artículo o delito:");
             if (crime) {
                 const cell = document.getElementById(`antecedents-${dni}`);
                 if (cell.innerText === "Sin antecedentes registrados.") {
