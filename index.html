@@ -166,7 +166,7 @@
         <div>Estado Actual: <span id="current-status" style="color: #16a34a; font-weight: bold;">10-8 Disponible</span></div>
     </div>
 
-    <!-- Navegación por Menús -->
+    <!-- Navegación General de la PDA -->
     <div class="dept-selector">
         <button class="btn-dept active" onclick="switchTab('tab-despacho')">🎧 Despacho y Unidades</button>
         <button class="btn-dept" onclick="switchTab('tab-ciudadanos')">👤 Base de Datos / Antecedentes</button>
@@ -175,13 +175,24 @@
 
     <!-- PESTAÑA 1: DESPACHO Y UNIDADES -->
     <div id="tab-despacho" class="tab-content active">
+        <!-- Sub-selector de Cuerpo Operativo -->
+        <div class="dept-selector" style="margin-bottom: 15px;">
+            <button class="btn-dept" style="background:#0f172a;" onclick="setService('PLV / CNP / GC')">🚔 Cuerpos Policiales</button>
+            <button class="btn-dept" style="background:#0f172a;" onclick="setService('Bombers València')">🚒 Bomberos</button>
+            <button class="btn-dept" style="background:#0f172a;" onclick="setService('SAMU / SVB')">🚑 Emergencias Sanitarias</button>
+            <button class="btn-dept" style="background:#0f172a;" onclick="setService('Conservación Carreteras')">🚜 Conservación / Grúa</button>
+            <button class="btn-dept" style="background:#0f172a;" onclick="setService('CCE 112 Dispatch')">🎧 Operador 112</button>
+        </div>
+
         <div class="grid-container">
+            <!-- Panel de Control Unidades -->
             <div class="card">
                 <h3>Gestión de Unidad</h3>
                 <div class="form-group">
                     <label>Indicativo de Unidad (Ej: METRO-10, SAMU-1, B-12)</label>
                     <input type="text" id="unit-id" placeholder="Ingresa tu clave de unidad">
                 </div>
+
                 <h4>Estado Operativo</h4>
                 <div class="status-grid">
                     <button class="btn-status status-10-8" onclick="sendStatus('10-8 | Disponible')">10-8 Disponible</button>
@@ -191,31 +202,35 @@
                 </div>
             </div>
 
+            <!-- Panel de Reportes / Avisos 112 -->
             <div class="card">
                 <h3>Crear Registro / Alerta 112</h3>
                 <form id="incident-form" onsubmit="submitIncident(event)">
                     <div class="form-group">
-                        <label>Tipo de Emergencia</label>
+                        <label>Tipo de Emergencia / Incidencia</label>
                         <select id="incident-type">
-                            <option value="Accidente de Tráfico">Accidente de Tráfico</option>
+                            <option value="Accidente de Tráfico (A-7/V-30)">Accidente de Tráfico</option>
                             <option value="Incendio Estructural / Forestal">Incendio Estructural / Forestal</option>
-                            <option value="Atención Sanitaria">Atención Sanitaria</option>
-                            <option value="Intervención Policial">Intervención Policial</option>
-                            <option value="Obstáculo en Calzada / Grúa">Conservación / Grúa</option>
+                            <option value="Atención Sanitaria de Urgencia">Atención Sanitaria</option>
+                            <option value="Persecución / Delito en Proceso">Intervención Policial</option>
+                            <option value="Obstáculo en Calzada / Vehículo Averiado">Conservación / Retirada Grúa</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Ubicación en ERLC</label>
-                        <input type="text" id="incident-location" required placeholder="Ej: Gasolinera Principal / V-30">
+                        <label>Ubicación / Zona en ERLC (Ej: Comisaría Central, Gasolinera, V-30)</label>
+                        <input type="text" id="incident-location" required placeholder="Ej: Carretera Principal cerca del Taller">
                     </div>
                     <div class="form-group">
                         <label>Detalles del Incidente</label>
-                        <textarea id="incident-details" rows="3" placeholder="Descripción del aviso..."></textarea>
+                        <textarea id="incident-details" rows="3" placeholder="Descripción de los hechos y unidades requeridas..."></textarea>
                     </div>
                     <button type="submit" class="btn-submit">Enviar Registro al Sistema</button>
                 </form>
+
                 <h4 style="margin-top:20px;">Historial de Incidentes Activos</h4>
-                <div id="incident-feed"></div>
+                <div id="incident-feed">
+                    <!-- Se llena dinámicamente -->
+                </div>
             </div>
         </div>
     </div>
@@ -262,7 +277,6 @@
                         </tr>
                     </thead>
                     <tbody id="citizen-table">
-                        <!-- Ficha de Ejemplo predeterminada -->
                         <tr>
                             <td>Carlos_Val</td>
                             <td>87654321B</td>
@@ -332,16 +346,27 @@
     </div>
 
     <script>
+        let currentDept = "PLV / CNP / GC";
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.btn-dept').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.dept-selector .btn-dept').forEach(btn => btn.classList.remove('active'));
             
             document.getElementById(tabId).classList.add('active');
             event.target.classList.add('active');
         }
 
+        function setService(dept) {
+            currentDept = dept;
+            alert(`Servicio activo cambiado a: ${dept}`);
+        }
+
         function sendStatus(status) {
+            const unit = document.getElementById('unit-id').value || "Unidad Sin Asignar";
             document.getElementById('current-status').innerText = status;
+
+            // Envío de Webhook a Discord
+            sendDiscordWebhook(`📢 **Cambio de Estado**\n**Servicio:** ${currentDept}\n**Unidad:** ${unit}\n**Estado:** ${status}`);
         }
 
         function submitIncident(e) {
@@ -354,8 +379,11 @@
             const feed = document.getElementById('incident-feed');
             const item = document.createElement('div');
             item.className = 'feed-item';
-            item.innerHTML = `<strong>[${type}]</strong> - ${location}<br><small>${details} | Registrado por: ${unit}</small>`;
+            item.innerHTML = `<strong>[${type}]</strong> - ${location}<br><small>${details} | Registrado por: ${unit} (${currentDept})</small>`;
             feed.prepend(item);
+
+            // Enviar alerta al Webhook de Discord
+            sendDiscordWebhook(`🚨 **NUEVO AVISO DE EMERGENCIA - 112 VALENCIA** 🚨\n**Tipo:** ${type}\n**Ubicación:** ${location}\n**Detalles:** ${details}\n**Generado por:** ${unit} (${currentDept})`);
 
             document.getElementById('incident-form').reset();
         }
@@ -379,6 +407,10 @@
                 <td><button onclick="addAntecedent('${dni}')" style="background:var(--accent-red); color:white; border:none; padding:5px 8px; border-radius:4px; cursor:pointer;">+ Antecedente</button></td>
             `;
             table.appendChild(row);
+
+            // Reportar afiliación a Discord
+            sendDiscordWebhook(`👤 **NUEVO JUGADOR REGISTRADO**\n**Nombre:** ${name}\n**DNI:** ${dni}\n**Licencia:** ${license}`);
+
             alert(`Jugador ${name} afiliado/registrado con éxito.`);
             document.querySelector('#tab-ciudadanos form').reset();
         }
@@ -392,6 +424,9 @@
                 } else {
                     cell.innerText += `, ${crime}`;
                 }
+
+                // Reportar antecedente a Discord
+                sendDiscordWebhook(`⚖️ **NUEVO ANTECEDENTE PENAL**\n**DNI Afectado:** ${dni}\n**Infracción:** ${crime}`);
             }
         }
 
@@ -407,6 +442,19 @@
                 } else {
                     row.style.display = "none";
                 }
+            });
+        }
+
+        function sendDiscordWebhook(message) {
+            // Reemplaza esta URL con la Webhook de tu canal de Discord
+            const webhookUrl = "TU_DISCORD_WEBHOOK_URL_AQUI"; 
+            
+            if(webhookUrl === "TU_DISCORD_WEBHOOK_URL_AQUI") return;
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: message })
             });
         }
     </script>
