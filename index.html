@@ -24,14 +24,14 @@
             padding: 0;
         }
 
-        /* PANTALLA DE LOGIN */
+        /* PANTALLA DE LOGIN DE INICIO */
         #login-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(15, 23, 42, 0.95);
+            background: rgba(15, 23, 42, 0.98);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -74,7 +74,7 @@
         /* CONTENIDO PRINCIPAL */
         .main-app {
             padding: 20px;
-            display: none; /* Se activa tras login */
+            display: none;
         }
 
         .header {
@@ -243,6 +243,13 @@
             font-size: 0.8em;
             font-weight: bold;
         }
+
+        .error-message {
+            color: var(--accent-red);
+            font-size: 0.85em;
+            margin-top: 10px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -250,26 +257,30 @@
     <!-- PANTALLA DE INICIO DE SESIÓN -->
     <div id="login-screen">
         <div class="login-card">
-            <h2>ACCESO AL SISTEMA 112</h2>
-            <p style="color: #94a3b8; font-size: 0.9em; margin-bottom: 20px;">Selecciona tu perfil de usuario para ingresar</p>
+            <h2>SISTEMA 112 - VALENCIA</h2>
+            <p style="color: #94a3b8; font-size: 0.9em; margin-bottom: 20px;">Selecciona el tipo de acceso</p>
             
             <div class="login-btn-group">
-                <button type="button" class="login-role-btn active" id="btn-role-gov" onclick="selectRole('gov')">🏛️ Cuerpo del Estado</button>
+                <button type="button" class="login-role-btn active" id="btn-role-gov" onclick="selectRole('gov')">🏛️ Cuerpos del Estado</button>
                 <button type="button" class="login-role-btn" id="btn-role-cit" onclick="selectRole('cit')">👤 Ciudadano</button>
             </div>
 
             <form onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label>Nombre de Usuario / Jugador</label>
-                    <input type="text" id="username" required placeholder="Ej: Agente_01 o Juan_Perez">
-                </div>
-                
-                <div class="form-group" id="pass-group">
-                    <label>Clave de Acceso Policial</label>
-                    <input type="password" id="password" placeholder="••••••••">
+                <div id="credentials-fields">
+                    <div class="form-group">
+                        <label>Nombre de Usuario</label>
+                        <input type="text" id="username" placeholder="Ingresa usuario">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" id="password" placeholder="••••••••">
+                    </div>
                 </div>
 
-                <button type="submit" class="btn-submit">Ingresar a la Plataforma</button>
+                <div id="login-error" class="error-message">Credenciales incorrectas para Cuerpos del Estado.</div>
+
+                <button type="submit" class="btn-submit" style="margin-top: 15px;">Ingresar al Sistema</button>
             </form>
         </div>
     </div>
@@ -279,7 +290,7 @@
         <div class="header">
             <div>
                 <h2>PDA CENTRO DE COORDINACIÓN DE EMERGENCIAS 112</h2>
-                <small>Usuario: <strong id="logged-user">---</strong> (<span id="logged-role-badge" class="badge-role">---</span>)</small>
+                <small>Acceso: <strong id="logged-user">---</strong> (<span id="logged-role-badge" class="badge-role">---</span>)</small>
             </div>
             <div>
                 <span id="gov-status-header">Estado: <strong id="current-status" style="color: #16a34a;">10-8 Disponible</strong> | </span>
@@ -404,7 +415,7 @@
             </div>
         </div>
 
-        <!-- PESTAÑA 3: CÓDIGO PENAL COMPLETO (Acceso Público / Todos) -->
+        <!-- PESTAÑA 3: CÓDIGO PENAL COMPLETO -->
         <div id="tab-penal" class="tab-content">
             <div class="card">
                 <h3>Código de Infracciones y Delitos - Normativa Oficial</h3>
@@ -683,43 +694,57 @@
             document.getElementById('btn-role-gov').classList.toggle('active', role === 'gov');
             document.getElementById('btn-role-cit').classList.toggle('active', role === 'cit');
             
-            const passGroup = document.getElementById('pass-group');
+            const credFields = document.getElementById('credentials-fields');
+            const errorDiv = document.getElementById('login-error');
+            errorDiv.style.display = 'none';
+
             if (role === 'cit') {
-                passGroup.style.display = 'none';
+                credFields.style.display = 'none';
             } else {
-                passGroup.style.display = 'block';
+                credFields.style.display = 'block';
             }
         }
 
         function handleLogin(e) {
             e.preventDefault();
-            const username = document.getElementById('username').value;
-            
+            const errorDiv = document.getElementById('login-error');
+            errorDiv.style.display = 'none';
+
+            if (currentRole === 'gov') {
+                const userVal = document.getElementById('username').value.trim();
+                const passVal = document.getElementById('password').value.trim();
+
+                // Validación requerida para Cuerpos del Estado
+                if (userVal === "VALENCIAPDA" && passVal === "VALENRPESP") {
+                    loginSuccess("VALENCIAPDA", "Cuerpo del Estado", "var(--accent-blue)");
+                } else {
+                    errorDiv.style.display = 'block';
+                }
+            } else {
+                // Acceso para Ciudadano (Sin credenciales)
+                loginSuccess("Ciudadano Anónimo", "Ciudadano", "var(--accent-yellow)");
+            }
+        }
+
+        function loginSuccess(userName, roleText, roleColor) {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'block';
-            document.getElementById('logged-user').innerText = username;
+            document.getElementById('logged-user').innerText = userName;
 
             const roleBadge = document.getElementById('logged-role-badge');
             const govStatusHeader = document.getElementById('gov-status-header');
             const govElements = document.querySelectorAll('.gov-only');
 
+            roleBadge.innerText = roleText;
+            roleBadge.style.background = roleColor;
+
             if (currentRole === 'gov') {
-                roleBadge.innerText = "Cuerpo del Estado";
-                roleBadge.style.background = "var(--accent-blue)";
                 govStatusHeader.style.display = "inline";
-                
-                govElements.forEach(el => el.style.display = "block");
-                
-                // Abrir despacho por defecto
+                govElements.forEach(el => el.style.display = "inline-block");
                 openTab('tab-despacho', 'nav-despacho');
             } else {
-                roleBadge.innerText = "Ciudadano";
-                roleBadge.style.background = "var(--accent-yellow)";
                 govStatusHeader.style.display = "none";
-                
                 govElements.forEach(el => el.style.display = "none");
-                
-                // Abrir código penal directamente
                 openTab('tab-penal', 'nav-penal');
             }
         }
@@ -729,6 +754,8 @@
             document.getElementById('login-screen').style.display = 'flex';
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
+            document.getElementById('login-error').style.display = 'none';
+            selectRole('gov');
         }
 
         function openTab(tabId, btnId) {
