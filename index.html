@@ -24,7 +24,7 @@
             padding: 0;
         }
 
-        /* PANTALLA DE LOGIN */
+        /* PANTALLA DE LOGIN DE INICIO */
         #login-screen {
             position: fixed;
             top: 0;
@@ -250,81 +250,6 @@
             margin-top: 10px;
             display: none;
         }
-
-        /* ESTILOS DEL MAPA DE ERLC VECTORIAL Y MARCADORES */
-        .map-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-            background: #1e293b;
-            cursor: crosshair;
-        }
-
-        .map-svg {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .map-marker {
-            position: absolute;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(15, 23, 42, 0.9);
-            padding: 4px 8px;
-            border-radius: 20px;
-            border: 1px solid var(--accent-green);
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: grab;
-            user-select: none;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px rgba(22, 163, 74, 0.8);
-            z-index: 100;
-            transition: left 0.3s ease, top 0.3s ease;
-        }
-
-        .map-marker:active {
-            cursor: grabbing;
-        }
-
-        .green-dot {
-            width: 12px;
-            height: 12px;
-            background-color: #10b981;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #10b981;
-        }
-
-        .quick-locations {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-        }
-
-        .btn-loc {
-            background: #0f172a;
-            color: #38bdf8;
-            border: 1px solid var(--border-color);
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85em;
-            font-weight: bold;
-        }
-
-        .btn-loc:hover {
-            background: var(--accent-blue);
-            color: white;
-        }
     </style>
 </head>
 <body>
@@ -368,39 +293,39 @@
                 <small>Acceso: <strong id="logged-user">---</strong> (<span id="logged-role-badge" class="badge-role">---</span>)</small>
             </div>
             <div>
-                <span id="gov-status-header">Estado: <strong id="current-status" style="color: #dc2626;">10-10 Fuera de Servicio</strong> | </span>
+                <span id="gov-status-header">Estado: <strong id="current-status" style="color: #16a34a;">10-8 Disponible</strong> | </span>
                 <button onclick="logout()" style="background: var(--accent-red); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">Cerrar Sesión</button>
             </div>
         </div>
 
-        <!-- Navegación General -->
+        <!-- Navegación General de la PDA -->
         <div class="dept-selector">
             <button class="btn-dept active gov-only" id="nav-despacho" onclick="switchTab(event, 'tab-despacho')">🎧 Despacho y Unidades</button>
-            <button class="btn-dept gov-only" id="nav-mapa" onclick="switchTab(event, 'tab-mapa')">🗺️ Mapa ERLC</button>
             <button class="btn-dept gov-only" id="nav-ciudadanos" onclick="switchTab(event, 'tab-ciudadanos')">👤 Base de Datos / Antecedentes</button>
             <button class="btn-dept" id="nav-penal" onclick="switchTab(event, 'tab-penal')">📜 Código Penal Oficial</button>
         </div>
 
-        <!-- PESTAÑA 1: DESPACHO Y UNIDADES -->
+        <!-- PESTAÑA 1: DESPACHO Y UNIDADES (Solo Cuerpos del Estado) -->
         <div id="tab-despacho" class="tab-content active">
             <div class="dept-selector" style="margin-bottom: 15px;">
                 <button class="btn-dept" style="background:#0f172a;" onclick="setService('PLV / CNP / GC')">🚔 Cuerpos Policiales</button>
                 <button class="btn-dept" style="background:#0f172a;" onclick="setService('Bombers València')">🚒 Bomberos</button>
                 <button class="btn-dept" style="background:#0f172a;" onclick="setService('SAMU / SVB')">🚑 Emergencias Sanitarias</button>
                 <button class="btn-dept" style="background:#0f172a;" onclick="setService('Conservación Carreteras')">🚜 Conservación / Grúa</button>
+                <button class="btn-dept" style="background:#0f172a;" onclick="setService('CCE 112 Dispatch')">🎧 Operador 112</button>
             </div>
 
             <div class="grid-container">
                 <div class="card">
                     <h3>Gestión de Unidad</h3>
                     <div class="form-group">
-                        <label>Indicativo / Placa de Unidad</label>
-                        <input type="text" id="unit-id" placeholder="Ej: METRO-10, PL-102, B-12" oninput="updateMarkerLabel()">
+                        <label>Indicativo de Unidad (Ej: METRO-10, SAMU-1, B-12)</label>
+                        <input type="text" id="unit-id" placeholder="Ingresa tu clave de unidad">
                     </div>
 
                     <h4>Estado Operativo</h4>
                     <div class="status-grid">
-                        <button class="btn-status status-10-8" onclick="sendStatus('10-8 | Disponible (En Servicio)')">10-8 De Servicio</button>
+                        <button class="btn-status status-10-8" onclick="sendStatus('10-8 | Disponible')">10-8 Disponible</button>
                         <button class="btn-status status-10-23" onclick="sendStatus('10-23 | En Camino')">10-23 En Camino</button>
                         <button class="btn-status status-10-97" onclick="sendStatus('10-97 | En Escena')">10-97 En Escena</button>
                         <button class="btn-status status-10-10" onclick="sendStatus('10-10 | Fuera de Servicio')">10-10 Fuera de Servicio</button>
@@ -411,7 +336,7 @@
                     <h3>Crear Registro / Alerta 112</h3>
                     <form id="incident-form" onsubmit="submitIncident(event)">
                         <div class="form-group">
-                            <label>Tipo de Emergencia</label>
+                            <label>Tipo de Emergencia / Incidencia</label>
                             <select id="incident-type">
                                 <option value="Accidente de Tráfico">Accidente de Tráfico</option>
                                 <option value="Incendio Estructural / Forestal">Incendio Estructural / Forestal</option>
@@ -422,7 +347,7 @@
                         </div>
                         <div class="form-group">
                             <label>Ubicación / Zona</label>
-                            <input type="text" id="incident-location" required placeholder="Ej: Hospital / Gasolinera / Comisaría">
+                            <input type="text" id="incident-location" required placeholder="Ej: Carretera Principal frente a Comisaría">
                         </div>
                         <div class="form-group">
                             <label>Detalles del Incidente</label>
@@ -437,71 +362,7 @@
             </div>
         </div>
 
-        <!-- PESTAÑA 2: MAPA EN TIEMPO REAL ERLC -->
-        <div id="tab-mapa" class="tab-content">
-            <div class="card" style="text-align: center;">
-                <h3>🗺️ Mapa Táctico Vectorial de Liberty County (ERLC)</h3>
-                <p style="color: #94a3b8; font-size: 0.9em; margin-bottom: 15px;">
-                    Estando en <strong>10-8 (Disponible)</strong>, pulsa directamente sobre el mapa o usa el selector para indicar tu ubicación actual (Ej: Hospital).
-                </p>
-
-                <!-- Mover rápido a ubicaciones -->
-                <div class="quick-locations">
-                    <span style="color: #94a3b8; font-size: 0.85em; align-self: center;">Mover a:</span>
-                    <button class="btn-loc" onclick="moveMarkerTo(25, 40)">🏥 Hospital</button>
-                    <button class="btn-loc" onclick="moveMarkerTo(75, 30)">🚔 Comisaría LCPD</button>
-                    <button class="btn-loc" onclick="moveMarkerTo(45, 20)">🏦 Banco de España / ERLC</button>
-                    <button class="btn-loc" onclick="moveMarkerTo(50, 70)">⛽ Gasolinera</button>
-                    <button class="btn-loc" onclick="moveMarkerTo(85, 75)">🚒 Estación Bomberos</button>
-                </div>
-                
-                <div class="map-wrapper" id="map-container" onclick="clickToMoveMarker(event)">
-                    <!-- Mapa Vectorial Interactivo SVG (Garantizado sin errores de imagen) -->
-                    <svg class="map-svg" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Fondo y Terreno -->
-                        <rect width="900" height="600" fill="#0f172a"/>
-                        <path d="M 0,150 Q 200,100 450,250 T 900,200 L 900,600 L 0,600 Z" fill="#1e293b"/>
-                        <path d="M 0,0 L 300,0 L 250,120 L 0,80 Z" fill="#111827"/>
-                        
-                        <!-- Río / Agua -->
-                        <path d="M 0,350 Q 300,250 500,450 T 900,380" fill="none" stroke="#0284c7" stroke-width="25" opacity="0.6"/>
-
-                        <!-- Carreteras Principales -->
-                        <path d="M 50,0 L 50,600 M 0,300 L 900,300 M 450,0 L 450,600 M 800,0 L 800,600" stroke="#475569" stroke-width="12" fill="none"/>
-                        <path d="M 100,100 L 800,500" stroke="#334155" stroke-width="8" stroke-dasharray="10,5" fill="none"/>
-
-                        <!-- Zonas y Edificios ERLC -->
-                        <!-- Hospital -->
-                        <rect x="180" y="200" width="100" height="80" rx="8" fill="#dc2626" opacity="0.3" stroke="#dc2626" stroke-width="2"/>
-                        <text x="230" y="245" fill="#f8fafc" font-size="14" font-weight="bold" text-anchor="middle">🏥 HOSPITAL</text>
-
-                        <!-- Comisaría LCPD -->
-                        <rect x="650" y="140" width="120" height="90" rx="8" fill="#0284c7" opacity="0.3" stroke="#0284c7" stroke-width="2"/>
-                        <text x="710" y="190" fill="#f8fafc" font-size="14" font-weight="bold" text-anchor="middle">🚔 COMISARÍA</text>
-
-                        <!-- Banco -->
-                        <rect x="380" y="80" width="110" height="70" rx="8" fill="#d97706" opacity="0.3" stroke="#d97706" stroke-width="2"/>
-                        <text x="435" y="120" fill="#f8fafc" font-size="14" font-weight="bold" text-anchor="middle">🏦 BANCO</text>
-
-                        <!-- Gasolinera -->
-                        <rect x="410" y="380" width="90" height="60" rx="8" fill="#16a34a" opacity="0.3" stroke="#16a34a" stroke-width="2"/>
-                        <text x="455" y="415" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">⛽ GASOLINERA</text>
-
-                        <!-- Bomberos -->
-                        <rect x="750" y="410" width="100" height="70" rx="8" fill="#e11d48" opacity="0.3" stroke="#e11d48" stroke-width="2"/>
-                        <text x="800" y="450" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">🚒 BOMBEROS</text>
-                    </svg>
-                    
-                    <!-- Marcador Verde de Unidad Activa -->
-                    <div id="user-marker" class="map-marker" style="top: 40%; left: 25%; display: none;">
-                        <div class="green-dot"></div>
-                        <span id="marker-label">VALENCIAPDA</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PESTAÑA 3: ANTECEDENTES Y CIUDADANOS -->
+        <!-- PESTAÑA 2: ANTECEDENTES Y CIUDADANOS (Solo Cuerpos del Estado) -->
         <div id="tab-ciudadanos" class="tab-content">
             <div class="grid-container">
                 <div class="card">
@@ -554,11 +415,11 @@
             </div>
         </div>
 
-        <!-- PESTAÑA 4: CÓDIGO PENAL COMPLETO -->
+        <!-- PESTAÑA 3: CÓDIGO PENAL COMPLETO -->
         <div id="tab-penal" class="tab-content">
             <div class="card">
                 <h3>Código de Infracciones y Delitos - Normativa Oficial</h3>
-                <input type="text" class="search-box" id="search-penal" onkeyup="filterPenal()" placeholder="Buscar por artículo o delito...">
+                <input type="text" class="search-box" id="search-penal" onkeyup="filterPenal()" placeholder="Buscar por artículo o delito (Ej: 1.17, Robo, Homicidio)...">
                 
                 <table id="penal-table">
                     <thead>
@@ -570,13 +431,254 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- CAPÍTULO I -->
                         <tr><td colspan="4" class="table-category-header">CAPÍTULO I: INFRACCIONES DE TRÁFICO</td></tr>
                         <tr><td>1.1</td><td>Uso excesivo del claxon</td><td>60 €</td><td>0</td></tr>
+                        <tr><td>1.2</td><td>Invadir el carril contrario</td><td>150 €</td><td>0</td></tr>
+                        <tr><td>1.3</td><td>Giro indebido</td><td>100 €</td><td>1</td></tr>
+                        <tr><td>1.4</td><td>Conducir fuera de vías autorizadas</td><td>120 €</td><td>0</td></tr>
+                        <tr><td>1.5</td><td>Hacer caso omiso a indicaciones policiales</td><td>350 €</td><td>0</td></tr>
+                        <tr><td>1.6</td><td>Conducir con un vehículo en mal estado</td><td>500 €</td><td>3</td></tr>
+                        <tr><td>1.7</td><td>Estacionar en un lugar no permitido</td><td>100 €</td><td>0</td></tr>
+                        <tr><td>1.8</td><td>Estacionar en zonas para vehículos eléctricos</td><td>120 €</td><td>0</td></tr>
+                        <tr><td>1.9</td><td>Obstruir la circulación</td><td>150 €</td><td>2</td></tr>
+                        <tr><td>1.10</td><td>Obstaculizar el tráfico en un cruce</td><td>180 €</td><td>2</td></tr>
+                        <tr><td>1.11</td><td>Conducir sin documentación vehicular</td><td>400 €</td><td>2</td></tr>
+                        <tr><td>1.12</td><td>Conducir sin carnet</td><td>900 €</td><td>0</td></tr>
+                        <tr><td>1.13</td><td>Saltarse un STOP</td><td>100 €</td><td>2</td></tr>
+                        <tr><td>1.14</td><td>Saltarse un ceda el paso</td><td>100 €</td><td>2</td></tr>
+                        <tr><td>1.15</td><td>Obstaculizar un paso de cebra</td><td>150 €</td><td>2</td></tr>
+                        <tr><td>1.16</td><td>Saltarse un semáforo</td><td>150 €</td><td>2</td></tr>
                         <tr><td>1.17</td><td>Conducción temeraria</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>1.18</td><td>Circular por zona no autorizada</td><td>150 €</td><td>2</td></tr>
+                        <tr><td>1.19</td><td>Circular sin cinturón de seguridad</td><td>100 €</td><td>2</td></tr>
+                        <tr><td>1.20</td><td>Saltarse un control policial</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>1.21</td><td>Conducir con documentos falsificados</td><td>1.000 €</td><td>0</td></tr>
+                        <tr><td>1.22</td><td>Superar límite de velocidad en poblado</td><td>450 €</td><td>2</td></tr>
+                        <tr><td>1.23</td><td>Superar limite de velocidad urbana</td><td>600 €</td><td>2</td></tr>
+                        <tr><td>1.24</td><td>Superar limite de velocidad en autopista</td><td>900 €</td><td>2</td></tr>
+                        <tr><td>1.25</td><td>Superar límite de velocidad en vías secundarias</td><td>300 €</td><td>2</td></tr>
+                        <tr><td>1.26</td><td>Conducir con un vehiculo no apto</td><td>400 €</td><td>0</td></tr>
+                        <tr><td>1.27</td><td>Adelantar en linea continua</td><td>180 €</td><td>2</td></tr>
                         <tr><td>1.28</td><td>Conducir bajo los efectos del alcohol</td><td>600 €</td><td>12</td></tr>
+                        <tr><td>1.29</td><td>Conducir bajo efectos de drogas</td><td>600 €</td><td>12</td></tr>
+                        <tr><td>1.30</td><td>Conducir utilizando un dispositivo móvil</td><td>250 €</td><td>4</td></tr>
+                        <tr><td>1.31</td><td>Conducir sin luces</td><td>150 €</td><td>1</td></tr>
+                        <tr><td>1.32</td><td>No ceder el paso a emergencias</td><td>400 €</td><td>0</td></tr>
+                        <tr><td>1.33</td><td>Obstaculizar salida de emergencias</td><td>400 €</td><td>4</td></tr>
+                        <tr><td>1.34</td><td>Meterse en una persecución</td><td>800 €</td><td>4</td></tr>
+                        <tr><td>1.35</td><td>Conducir distraido</td><td>120 €</td><td>0</td></tr>
+                        <tr><td>1.36</td><td>Provocar un accidente</td><td>600 €</td><td>0</td></tr>
+                        <tr><td>1.37</td><td>Conducir sin matricula</td><td>250 €</td><td>3</td></tr>
+                        <tr><td>1.38</td><td>Acoso al volante</td><td>500 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO II -->
                         <tr><td colspan="4" class="table-category-header">CAPÍTULO II: AGRESIONES Y ALTERACIÓN DEL ORDEN</td></tr>
+                        <tr><td>2.1</td><td>Disturbios en vía pública</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>2.2</td><td>Intento de agresión sin arma</td><td>900 €</td><td>0</td></tr>
+                        <tr><td>2.3</td><td>Intento de agresión con arma contundente</td><td>1.100 €</td><td>0</td></tr>
+                        <tr><td>2.4</td><td>Intento de agresión con arma blanca</td><td>1.300 €</td><td>0</td></tr>
+                        <tr><td>2.5</td><td>Intento de agresión con arma de fuego</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>2.6</td><td>Agresión a un ciudadano sin arma</td><td>1.800 €</td><td>0</td></tr>
+                        <tr><td>2.7</td><td>Agresión a un ciudadano con arma contundente</td><td>2.200 €</td><td>0</td></tr>
+                        <tr><td>2.8</td><td>Agresión a un ciudadano con arma blanca</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>2.9</td><td>Agresión a un ciudadano con arma de fuego</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>2.10</td><td>Falta de respeto a un ciudadano</td><td>400 €</td><td>0</td></tr>
+                        <tr><td>2.11</td><td>Amenaza verbal hacia un ciudadano</td><td>900 €</td><td>0</td></tr>
                         <tr><td>2.12</td><td>Alteración del orden público</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>2.13</td><td>Venta ambulante sin autorización</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>2.14</td><td>Manifestación ilegal</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>2.15</td><td>Dañar mobiliario urbano</td><td>600 €</td><td>0</td></tr>
+                        <tr><td>2.16</td><td>Acoso psicológico</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>2.17</td><td>Suplantación de identidad</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>2.18</td><td>Racismo</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>2.19</td><td>Homofobia</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>2.20</td><td>Circular con la cara tapada</td><td>600 €</td><td>0</td></tr>
+                        <tr><td>2.21</td><td>Circular semidesnudo</td><td>300 €</td><td>0</td></tr>
+                        <tr><td>2.22</td><td>Negarse a identificarse</td><td>1.000 €</td><td>0</td></tr>
+                        <tr><td>2.23</td><td>Obstrucción a la justicia</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>2.24</td><td>Violar un cordón policial</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>2.25</td><td>Daños dolosos</td><td>1.800 €</td><td>0</td></tr>
+                        <tr><td>2.26</td><td>Daños imprudentes</td><td>900 €</td><td>0</td></tr>
+                        <tr><td>2.27</td><td>Violar orden de alejamiento</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>2.28</td><td>Allanamiento de morada</td><td>1.800 €</td><td>0</td></tr>
+                        <tr><td>2.29</td><td>Violar derecho de privacidad</td><td>1.500 €</td><td>0</td></tr>
                         <tr><td>2.30</td><td>Faltas de respeto a funcionario</td><td>1.000 €</td><td>0</td></tr>
+                        <tr><td>2.31</td><td>Amenaza verbal a funcionario</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>2.32</td><td>Injurias o calumnias</td><td>800 €</td><td>0</td></tr>
+                        <tr><td>2.33</td><td>Realizar chantajes</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>2.34</td><td>Organizar peleas ilegales</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>2.35</td><td>Carreras ilegales</td><td>5.000 €</td><td>0</td></tr>
+                        <tr><td>2.36</td><td>Provocar un incendio</td><td>6.000 €</td><td>0</td></tr>
+                        <tr><td>2.37</td><td>Manipulación de pruebas</td><td>8.000 €</td><td>0</td></tr>
+                        <tr><td>2.38</td><td>Uso indebido de emergencias</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>2.39</td><td>Apología del delito</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>2.40</td><td>Encubrimiento</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>2.41</td><td>Tráfico de influencias</td><td>7.500 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO III -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO III: ROBOS Y ASALTOS</td></tr>
+                        <tr><td>3.1</td><td>Robo de vehículo civil</td><td>1.800 €</td><td>0</td></tr>
+                        <tr><td>3.2</td><td>Robo de vehículo oficial</td><td>2.800 €</td><td>0</td></tr>
+                        <tr><td>3.3</td><td>Robo de establecimientos</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>3.4</td><td>Robo a gasolinera</td><td>800 €</td><td>0</td></tr>
+                        <tr><td>3.5</td><td>Robo a Tool Store</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>3.6</td><td>Robo a Tienda de Drones</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>3.7</td><td>Robo a joyería</td><td>12.000 €</td><td>0</td></tr>
+                        <tr><td>3.8</td><td>Robo al Banco de España</td><td>1.000.000 €</td><td>0</td></tr>
+                        <tr><td>3.9</td><td>Robo a un ATM</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>3.10</td><td>Robo a armería</td><td>8.000 €</td><td>0</td></tr>
+                        <tr><td>3.11</td><td>Intento de robo de establecimiento</td><td>900 €</td><td>0</td></tr>
+                        <tr><td>3.12</td><td>Intento de robo de gasolinera</td><td>400 €</td><td>0</td></tr>
+                        <tr><td>3.13</td><td>Intento de robo de Tool Store</td><td>1.750 €</td><td>0</td></tr>
+                        <tr><td>3.14</td><td>Intento de robo de Tienda de Drones</td><td>2.250 €</td><td>0</td></tr>
+                        <tr><td>3.15</td><td>Intento de robo de joyería</td><td>6.000 €</td><td>0</td></tr>
+                        <tr><td>3.16</td><td>Intento de robo del Banco de España</td><td>50.000 €</td><td>0</td></tr>
+                        <tr><td>3.17</td><td>Intento de robo de ATM</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>3.18</td><td>Intento de robo de armeria</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>3.19</td><td>Cómplice de robo (50%)</td><td>0 €</td><td>0</td></tr>
+                        <tr><td>3.20</td><td>Asalto a civil con arma blanca</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>3.21</td><td>Asalto a civil con arma de fuego</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>3.22</td><td>Asalto a ciudadano mediante fuerza</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>3.23</td><td>Asalto a funcionario público</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>3.24</td><td>Intento de asalto a funcionario</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>3.25</td><td>Hurto en via pública</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>3.26</td><td>Impago de multas</td><td>1.400 €</td><td>0</td></tr>
+                        <tr><td>3.27</td><td>Impago de deudas</td><td>1.400 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO IV -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO IV: TENENCIA DE ARMAS Y OBJETOS</td></tr>
+                        <tr><td>4.1</td><td>Posesión ilegal de arma blanca</td><td>600 €</td><td>0</td></tr>
+                        <tr><td>4.2</td><td>Exhibición de arma blanca</td><td>900 €</td><td>0</td></tr>
+                        <tr><td>4.3</td><td>Posesión ilegal de arma de bajo calibre</td><td>1.800 €</td><td>0</td></tr>
+                        <tr><td>4.4</td><td>Posesión ilegal de arma de medio calibre</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>4.5</td><td>Posesión ilegal de arma de alto calibre</td><td>6.000 €</td><td>0</td></tr>
+                        <tr><td>4.6</td><td>Exhibición de arma de bajo calibre</td><td>2.200 €</td><td>0</td></tr>
+                        <tr><td>4.7</td><td>Exhibición de arma de medio calibre</td><td>3.400 €</td><td>0</td></tr>
+                        <tr><td>4.8</td><td>Exhibición de arma de alto calibre</td><td>6.600 €</td><td>0</td></tr>
+                        <tr><td>4.9</td><td>Mal uso de un arma</td><td>2.200 €</td><td>0</td></tr>
+                        <tr><td>4.10</td><td>Posesión de herramientas de robo</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>4.11</td><td>Posesión de explosivos</td><td>18.000 €</td><td>0</td></tr>
+                        <tr><td>4.12</td><td>Posesión de munición</td><td>300 €</td><td>0</td></tr>
+                        <tr><td>4.13</td><td>Posesión de equipamiento táctico</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>4.14</td><td>Venta de armas</td><td>20.000 €</td><td>0</td></tr>
+                        <tr><td>4.15</td><td>Posesión o venta de armamento estatal</td><td>45.000 €</td><td>0</td></tr>
+                        <tr><td>4.16</td><td>Tráfico de armas</td><td>35.000 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO V -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO V: POSESIÓN Y TRÁFICO DE DIVISAS</td></tr>
+                        <tr><td>5.1</td><td>Posesión de dinero negro de 1 a 5.000 €</td><td>6.000 €</td><td>0</td></tr>
+                        <tr><td>5.2</td><td>Posesión de dinero negro de 5.001 a 10.000 €</td><td>10.000 €</td><td>0</td></tr>
+                        <tr><td>5.3</td><td>Posesión de dinero negro de 10.001 a 30.000 €</td><td>25.000 €</td><td>0</td></tr>
+                        <tr><td>5.4</td><td>Posesión de dinero negro superior a 30.000 €</td><td>45.000 €</td><td>0</td></tr>
+                        <tr><td>5.5</td><td>Blanqueo de capitales</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>5.6</td><td>Creación de dinero ilegal</td><td>9.000 €</td><td>0</td></tr>
+                        <tr><td>5.7</td><td>Tráfico de capitales</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>5.8</td><td>Posesión de objetos robados</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>5.9</td><td>Posesión de joyas robadas</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>5.10</td><td>Venta de joyas robadas</td><td>2.600 €</td><td>0</td></tr>
+                        <tr><td>5.11</td><td>Venta de objetos robados</td><td>1.600 €</td><td>0</td></tr>
+                        <tr><td>5.12</td><td>Evasión fiscal</td><td>7.700 €</td><td>0</td></tr>
+                        <tr><td>5.13</td><td>Fraude fiscal</td><td>9.900 €</td><td>0</td></tr>
+                        <tr><td>5.14</td><td>Evasión de impuestos</td><td>15.000 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO VI -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO VI: DELITOS CONTRA LA SALUD PÚBLICA</td></tr>
+                        <tr><td>6.1</td><td>Posesión de alcohol siendo menor</td><td>300 €</td><td>0</td></tr>
+                        <tr><td>6.2</td><td>Posesión de drogas siendo menor</td><td>600 €</td><td>0</td></tr>
+                        <tr><td>6.3</td><td>Venta de alcohol o drogas a menores</td><td>890 €</td><td>0</td></tr>
+                        <tr><td>6.4</td><td>Posesión de marihuana</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>6.5</td><td>Posesión de cocaína</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>6.6</td><td>Posesión de hachis (+3 g)</td><td>1.350 €</td><td>0</td></tr>
+                        <tr><td>6.7</td><td>Posesión de otras drogas</td><td>1.300 €</td><td>0</td></tr>
+                        <tr><td>6.8</td><td>Producción de marihuana</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>6.9</td><td>Producción de opio/cocaína</td><td>1.700 €</td><td>0</td></tr>
+                        <tr><td>6.10</td><td>Producción de LSD/heroína</td><td>5.525 €</td><td>0</td></tr>
+                        <tr><td>6.12</td><td>Caminar bajo efectos de drogas</td><td>500 €</td><td>0</td></tr>
+                        <tr><td>6.13</td><td>Venta de estupefacientes</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>6.14</td><td>Tráfico de drogas (+1 kg)</td><td>7.000 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO VII -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO VII: DELITOS CONTRA LA INTEGRIDAD</td></tr>
+                        <tr><td>7.1</td><td>Intento de secuestro civil con arma blanca</td><td>800 €</td><td>0</td></tr>
+                        <tr><td>7.2</td><td>Intento de secuestro civil con arma de fuego</td><td>1.600 €</td><td>0</td></tr>
+                        <tr><td>7.3</td><td>Secuestro civil con arma blanca</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>7.4</td><td>Secuestro civil con arma de fuego</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>7.5</td><td>Intento de homicidio sin arma</td><td>900 €</td><td>0</td></tr>
+                        <tr><td>7.6</td><td>Intento de homicidio con arma blanca</td><td>1.200 €</td><td>0</td></tr>
+                        <tr><td>7.7</td><td>Intento de homicidio con arma de fuego</td><td>1.900 €</td><td>0</td></tr>
+                        <tr><td>7.8</td><td>Homicidio imprudente</td><td>1.100 €</td><td>0</td></tr>
+                        <tr><td>7.9</td><td>Homicidio con uso de arma</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>7.10</td><td>Homicidio con ensañamiento</td><td>9.000 €</td><td>0</td></tr>
+                        <tr><td>7.11</td><td>Homicidio con alevosía (CK)</td><td>35.000 €</td><td>0</td></tr>
+                        <tr><td>7.12</td><td>Amenaza o extorsión a ciudadano</td><td>800 €</td><td>0</td></tr>
+                        <tr><td>7.13</td><td>Amenaza o extorsión con arma</td><td>1.800 €</td><td>0</td></tr>
+                        <tr><td>7.14</td><td>Omisión de socorro</td><td>800 €</td><td>0</td></tr>
+                        <tr><td>7.15</td><td>Cooperador en intento de suicidio</td><td>800 €</td><td>0</td></tr>
+                        <tr><td>7.16</td><td>Negligencia médica con lesiones</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>7.17</td><td>Negligencia médica con muerte</td><td>7.500 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO VIII -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO VIII: DELITOS DE DOCUMENTOS Y LICENCIAS</td></tr>
+                        <tr><td>8.1</td><td>Falsificación de documentos</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>8.2</td><td>Posesión de documentos falsificados</td><td>1.800 €</td><td>0</td></tr>
+                        <tr><td>8.3</td><td>Estafa</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>8.4</td><td>Dar número de placa falso</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>8.5</td><td>Dar número de colegiado falso</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>8.6</td><td>Realizar denuncia falsa</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>8.7</td><td>Realizar falso testimonio</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>8.8</td><td>Tráfico de documentos falsificados</td><td>2.100 €</td><td>0</td></tr>
+
+                        <!-- CAPÍTULO IX -->
+                        <tr><td colspan="4" class="table-category-header">CAPÍTULO IX: DELITOS CONTRA LA ADMINISTRACIÓN</td></tr>
+                        <tr><td>9.1</td><td>Desacato a la autoridad</td><td>300 €</td><td>0</td></tr>
+                        <tr><td>9.2</td><td>Intento de homicidio a Fiscal/Juez/Abogado</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>9.3</td><td>Homicidio de Fiscal o Juez</td><td>7.500 €</td><td>0</td></tr>
+                        <tr><td>9.3b</td><td>Homicidio con alevosía de Fiscal/Juez (CK)</td><td>50.000 €</td><td>0</td></tr>
+                        <tr><td>9.4</td><td>Atentado contra la autoridad</td><td>1.100 €</td><td>0</td></tr>
+                        <tr><td>9.5</td><td>Allanamiento de zonas privadas</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>9.6</td><td>Robo de documentos estatales</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>9.7</td><td>Hurto de documentos estatales</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>9.8</td><td>Robo a funcionario (sin fuerza)</td><td>2.250 €</td><td>0</td></tr>
+                        <tr><td>9.9</td><td>Hurto de armamento estatal</td><td>9.500 €</td><td>0</td></tr>
+                        <tr><td>9.10</td><td>Robo de armamento estatal (sin fuerza)</td><td>6.000 €</td><td>0</td></tr>
+                        <tr><td>9.11</td><td>Resistencia al arresto</td><td>850 €</td><td>0</td></tr>
+                        <tr><td>9.12</td><td>Intento de soborno a ciudadano</td><td>1.650 €</td><td>0</td></tr>
+                        <tr><td>9.13</td><td>Intento de soborno a funcionario</td><td>2.200 €</td><td>0</td></tr>
+                        <tr><td>9.14</td><td>Aceptar soborno como civil</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>9.15</td><td>Aceptar soborno como funcionario</td><td>5.600 €</td><td>0</td></tr>
+                        <tr><td>9.16</td><td>Intento de secuestro de funcionario</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>9.17</td><td>Secuestro a funcionario</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>9.18</td><td>Difamar a funcionario</td><td>1.700 €</td><td>0</td></tr>
+                        <tr><td>9.19</td><td>Corrupción</td><td>9.000 €</td><td>0</td></tr>
+                        <tr><td>9.20</td><td>Suplantación de funcionario</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>9.21</td><td>Intento de secuestro de miembro del gobierno</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>9.22</td><td>Secuestro de miembro del gobierno</td><td>7.500 €</td><td>0</td></tr>
+                        <tr><td>9.23</td><td>Atentado terrorista</td><td>150.000 €</td><td>0</td></tr>
+                        <tr><td>9.24</td><td>Huir de la justicia</td><td>1.500 €</td><td>0</td></tr>
+                        <tr><td>9.25</td><td>Atentar contra la vida de múltiples oficiales</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>9.26</td><td>Desvelar secretos de Estado</td><td>15.000 €</td><td>0</td></tr>
+                        <tr><td>9.27</td><td>Obstrucción a la justicia</td><td>750 €</td><td>0</td></tr>
+                        <tr><td>9.28</td><td>Traición a la patria</td><td>7.700 €</td><td>0</td></tr>
+                        <tr><td>9.29</td><td>Venta de armamento estatal (funcionario)</td><td>15.000 €</td><td>0</td></tr>
+                        <tr><td>9.30</td><td>Intento de homicidio a funcionario con arma contundente</td><td>3.500 €</td><td>0</td></tr>
+                        <tr><td>9.31</td><td>Intento de homicidio a funcionario con arma blanca</td><td>3.700 €</td><td>0</td></tr>
+                        <tr><td>9.32</td><td>Homicidio imprudente de funcionario</td><td>3.500 €</td><td>0</td></tr>
+                        <tr><td>9.33</td><td>Homicidio con ensañamiento de funcionario</td><td>12.000 €</td><td>0</td></tr>
+                        <tr><td>9.34</td><td>Homicidio con alevosía de funcionario (CK)</td><td>40.000 €</td><td>0</td></tr>
+                        <tr><td>9.35</td><td>Dañar vehiculo estatal</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>9.36</td><td>Intento de agresión a funcionario sin arma</td><td>2.000 €</td><td>0</td></tr>
+                        <tr><td>9.37</td><td>Intento de agresión a funcionario con arma contundente</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>9.38</td><td>Intento de agresión a funcionario con arma blanca</td><td>3.000 €</td><td>0</td></tr>
+                        <tr><td>9.39</td><td>Intento de agresión a funcionario con arma de fuego</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>9.40</td><td>Agresión a funcionario sin arma</td><td>4.000 €</td><td>0</td></tr>
+                        <tr><td>9.41</td><td>Agresión a funcionario con arma contundente</td><td>4.500 €</td><td>0</td></tr>
+                        <tr><td>9.42</td><td>Agresión a funcionario con arma blanca</td><td>5.000 €</td><td>0</td></tr>
+                        <tr><td>9.43</td><td>Agresión a funcionario con arma de fuego</td><td>6.500 €</td><td>0</td></tr>
+                        <tr><td>9.44</td><td>Pertenencia a banda organizada</td><td>5.000 €</td><td>0</td></tr>
+                        <tr><td>9.45</td><td>Liderazgo de organización criminal</td><td>12.000 €</td><td>0</td></tr>
+                        <tr><td>9.46</td><td>Uso de distintivos de banda en delitos</td><td>2.500 €</td><td>0</td></tr>
+                        <tr><td>9.47</td><td>Tráfico de influencias por administración</td><td>10.000 €</td><td>0</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -593,9 +695,14 @@
             document.getElementById('btn-role-cit').classList.toggle('active', role === 'cit');
             
             const credFields = document.getElementById('credentials-fields');
-            document.getElementById('login-error').style.display = 'none';
+            const errorDiv = document.getElementById('login-error');
+            errorDiv.style.display = 'none';
 
-            credFields.style.display = (role === 'cit') ? 'none' : 'block';
+            if (role === 'cit') {
+                credFields.style.display = 'none';
+            } else {
+                credFields.style.display = 'block';
+            }
         }
 
         function handleLogin(e) {
@@ -607,12 +714,14 @@
                 const userVal = document.getElementById('username').value.trim();
                 const passVal = document.getElementById('password').value.trim();
 
+                // Validación requerida para Cuerpos del Estado
                 if (userVal === "VALENCIAPDA" && passVal === "VALENRPESP") {
                     loginSuccess("VALENCIAPDA", "Cuerpo del Estado", "var(--accent-blue)");
                 } else {
                     errorDiv.style.display = 'block';
                 }
             } else {
+                // Acceso para Ciudadano (Sin credenciales)
                 loginSuccess("Ciudadano Anónimo", "Ciudadano", "var(--accent-yellow)");
             }
         }
@@ -649,14 +758,6 @@
             selectRole('gov');
         }
 
-        function switchTab(event, tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.dept-selector > .btn-dept').forEach(btn => btn.classList.remove('active'));
-            
-            document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
         function openTab(tabId, btnId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.dept-selector > .btn-dept').forEach(btn => btn.classList.remove('active'));
@@ -665,65 +766,24 @@
             if (btnId) document.getElementById(btnId).classList.add('active');
         }
 
+        function switchTab(event, tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.dept-selector > .btn-dept').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
         function setService(dept) {
             currentDept = dept;
             alert(`Servicio activo cambiado a: ${dept}`);
         }
 
         function sendStatus(status) {
-            const statusText = document.getElementById('current-status');
-            statusText.innerText = status;
+            const unit = document.getElementById('unit-id').value || "Unidad Sin Asignar";
+            document.getElementById('current-status').innerText = status;
 
-            const marker = document.getElementById('user-marker');
-
-            if (status.includes('10-8') || status.includes('10-23') || status.includes('10-97')) {
-                statusText.style.color = "#16a34a";
-                marker.style.display = "flex";
-                updateMarkerLabel();
-            } else {
-                statusText.style.color = "#dc2626";
-                marker.style.display = "none";
-            }
-        }
-
-        function updateMarkerLabel() {
-            const unitVal = document.getElementById('unit-id').value.trim() || "VALENCIAPDA";
-            document.getElementById('marker-label').innerText = unitVal;
-        }
-
-        /* MOVER EL PUNTO VERDE EN EL MAPA */
-        function moveMarkerTo(xPercent, yPercent) {
-            const marker = document.getElementById('user-marker');
-            marker.style.left = `${xPercent}%`;
-            marker.style.top = `${yPercent}%`;
-        }
-
-        function clickToMoveMarker(e) {
-            const marker = document.getElementById('user-marker');
-            if (marker.style.display === "none") return;
-
-            const rect = document.getElementById('map-container').getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            const xPercent = (x / rect.width) * 100;
-            const yPercent = (y / rect.height) * 100;
-
-            moveMarkerTo(xPercent, yPercent);
-        }
-
-        /* ESTRUCTURA PARA API DE ERLC (OPCIONAL SI TIENES SERVER KEY) */
-        async function fetchERLCAPI() {
-            /*
-            const serverKey = "TU_SERVER_KEY_DE_ERLC";
-            try {
-                const res = await fetch("https://api.erlc.gg/v2/server/players", {
-                    headers: { "Server-Key": serverKey }
-                });
-                const data = await res.json();
-                // Aquí podrías mapear las coordenadas del jugador a % del mapa
-            } catch(e) { console.error(e); }
-            */
+            sendDiscordWebhook(`📢 **Cambio de Estado**\n**Servicio:** ${currentDept}\n**Unidad:** ${unit}\n**Estado:** ${status}`);
         }
 
         function submitIncident(e) {
@@ -731,13 +791,15 @@
             const type = document.getElementById('incident-type').value;
             const location = document.getElementById('incident-location').value;
             const details = document.getElementById('incident-details').value;
-            const unit = document.getElementById('unit-id').value || "VALENCIAPDA";
+            const unit = document.getElementById('unit-id').value || "CCE 112";
 
             const feed = document.getElementById('incident-feed');
             const item = document.createElement('div');
             item.className = 'feed-item';
             item.innerHTML = `<strong>[${type}]</strong> - ${location}<br><small>${details} | Registrado por: ${unit} (${currentDept})</small>`;
             feed.prepend(item);
+
+            sendDiscordWebhook(`🚨 **NUEVO AVISO DE EMERGENCIA - 112 VALENCIA** 🚨\n**Tipo:** ${type}\n**Ubicación:** ${location}\n**Detalles:** ${details}\n**Generado por:** ${unit} (${currentDept})`);
 
             document.getElementById('incident-form').reset();
         }
@@ -762,12 +824,14 @@
             `;
             table.appendChild(row);
 
+            sendDiscordWebhook(`👤 **NUEVO JUGADOR REGISTRADO**\n**Nombre:** ${name}\n**DNI:** ${dni}\n**Licencia:** ${license}`);
+
             alert(`Jugador ${name} registrado con éxito.`);
             document.querySelector('#tab-ciudadanos form').reset();
         }
 
         function addAntecedent(dni) {
-            const crime = prompt("Introduce el artículo o delito:");
+            const crime = prompt("Introduce el número de artículo o descripción del delito:");
             if (crime) {
                 const cell = document.getElementById(`antecedents-${dni}`);
                 if (cell.innerText === "Sin antecedentes registrados.") {
@@ -775,6 +839,8 @@
                 } else {
                     cell.innerText += `, ${crime}`;
                 }
+
+                sendDiscordWebhook(`⚖️ **NUEVO ANTECEDENTE PENAL**\n**DNI Afectado:** ${dni}\n**Infracción:** ${crime}`);
             }
         }
 
@@ -785,7 +851,11 @@
             rows.forEach(row => {
                 const name = row.cells[0].innerText.toLowerCase();
                 const dni = row.cells[1].innerText.toLowerCase();
-                row.style.display = (name.includes(input) || dni.includes(input)) ? "" : "none";
+                if (name.includes(input) || dni.includes(input)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
             });
         }
 
@@ -795,7 +865,23 @@
 
             rows.forEach(row => {
                 if (row.cells.length === 1) return;
-                row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+                const text = row.innerText.toLowerCase();
+                if (text.includes(input)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        function sendDiscordWebhook(message) {
+            const webhookUrl = "TU_DISCORD_WEBHOOK_URL_AQUI"; 
+            if(webhookUrl === "TU_DISCORD_WEBHOOK_URL_AQUI") return;
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: message })
             });
         }
     </script>
