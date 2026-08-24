@@ -69,6 +69,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
         }
 
         .status-grid {
@@ -131,6 +132,31 @@
             margin-bottom: 10px;
             border-left: 4px solid var(--accent-blue);
         }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid #334155;
+        }
+
+        th {
+            background-color: #0f172a;
+            color: var(--accent-blue);
+        }
     </style>
 </head>
 <body>
@@ -140,82 +166,182 @@
         <div>Estado Actual: <span id="current-status" style="color: #16a34a; font-weight: bold;">10-8 Disponible</span></div>
     </div>
 
-    <!-- Selección de Servicio -->
+    <!-- Navegación por Menús -->
     <div class="dept-selector">
-        <button class="btn-dept active" onclick="setDept('PLV / CNP / GC')">🚔 Cuerpos Policiales</button>
-        <button class="btn-dept" onclick="setDept('Bombers València')">🚒 Bomberos</button>
-        <button class="btn-dept" onclick="setDept('SAMU / SVB')">🚑 Emergencias Sanitarias</button>
-        <button class="btn-dept" onclick="setDept('Conservación Carreteras')">🚜 Conservación / Grúa</button>
-        <button class="btn-dept" onclick="setDept('CCE 112 Dispatch')">🎧 Operador 112</button>
+        <button class="btn-dept active" onclick="switchTab('tab-despacho')">🎧 Despacho y Unidades</button>
+        <button class="btn-dept" onclick="switchTab('tab-ciudadanos')">👤 Base de Datos / Antecedentes</button>
+        <button class="btn-dept" onclick="switchTab('tab-penal')">📜 Código Penal Valencia</button>
     </div>
 
-    <div class="grid-container">
-        
-        <!-- Panel de Control Unidades -->
-        <div class="card">
-            <h3>Gestión de Unidad</h3>
-            <div class="form-group">
-                <label>Indicativo de Unidad (Ej: METRO-10, H-20, SAMU-1)</label>
-                <input type="text" id="unit-id" placeholder="Ingresa tu clave de unidad">
+    <!-- PESTAÑA 1: DESPACHO Y UNIDADES -->
+    <div id="tab-despacho" class="tab-content active">
+        <div class="grid-container">
+            <div class="card">
+                <h3>Gestión de Unidad</h3>
+                <div class="form-group">
+                    <label>Indicativo de Unidad (Ej: METRO-10, SAMU-1, B-12)</label>
+                    <input type="text" id="unit-id" placeholder="Ingresa tu clave de unidad">
+                </div>
+                <h4>Estado Operativo</h4>
+                <div class="status-grid">
+                    <button class="btn-status status-10-8" onclick="sendStatus('10-8 | Disponible')">10-8 Disponible</button>
+                    <button class="btn-status status-10-23" onclick="sendStatus('10-23 | En Camino')">10-23 En Camino</button>
+                    <button class="btn-status status-10-97" onclick="sendStatus('10-97 | En Escena')">10-97 En Escena</button>
+                    <button class="btn-status status-10-10" onclick="sendStatus('10-10 | Fuera de Servicio')">10-10 Fuera de Servicio</button>
+                </div>
             </div>
 
-            <h4>Estado Operativo</h4>
-            <div class="status-grid">
-                <button class="btn-status status-10-8" onclick="sendStatus('10-8 | Disponible')">10-8 Disponible</button>
-                <button class="btn-status status-10-23" onclick="sendStatus('10-23 | En Camino')">10-23 En Camino</button>
-                <button class="btn-status status-10-97" onclick="sendStatus('10-97 | En Escena')">10-97 En Escena</button>
-                <button class="btn-status status-10-10" onclick="sendStatus('10-10 | Fuera de Servicio')">10-10 Fuera de Servicio</button>
-            </div>
-        </div>
-
-        <!-- Panel de Reportes / Avisos 112 -->
-        <div class="card">
-            <h3>Crear Registro / Alerta 112</h3>
-            <form id="incident-form" onsubmit="submitIncident(event)">
-                <div class="form-group">
-                    <label>Tipo de Emergencia / Incidencia</label>
-                    <select id="incident-type">
-                        <option value="Accidente de Tráfico (A-7/V-30)">Accidente de Tráfico</option>
-                        <option value="Incendio Estructural / Forestal">Incendio Estructural / Forestal</option>
-                        <option value="Atención Sanitaria de Urgencia">Atención Sanitaria</option>
-                        <option value="Persecución / Delito en Proceso">Intervención Policial</option>
-                        <option value="Obstáculo en Calzada / Vehículo Averiado">Conservación / Retirada Grúa</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Ubicación / Zona en ERLC (Ej: Comisaría Central, Gasolinera, V-30)</label>
-                    <input type="text" id="incident-location" required placeholder="Ej: Carretera Principal cerca del Taller">
-                </div>
-                <div class="form-group">
-                    <label>Detalles del Incidente</label>
-                    <textarea id="incident-details" rows="3" placeholder="Descripción de los hechos y unidades requeridas..."></textarea>
-                </div>
-                <button type="submit" class="btn-submit">Enviar Registro al Sistema</button>
-            </form>
-
-            <h4 style="margin-top:20px;">Historial de Incidentes Activos</h4>
-            <div id="incident-feed">
-                <!-- Se llena dinámicamente -->
+            <div class="card">
+                <h3>Crear Registro / Alerta 112</h3>
+                <form id="incident-form" onsubmit="submitIncident(event)">
+                    <div class="form-group">
+                        <label>Tipo de Emergencia</label>
+                        <select id="incident-type">
+                            <option value="Accidente de Tráfico">Accidente de Tráfico</option>
+                            <option value="Incendio Estructural / Forestal">Incendio Estructural / Forestal</option>
+                            <option value="Atención Sanitaria">Atención Sanitaria</option>
+                            <option value="Intervención Policial">Intervención Policial</option>
+                            <option value="Obstáculo en Calzada / Grúa">Conservación / Grúa</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Ubicación en ERLC</label>
+                        <input type="text" id="incident-location" required placeholder="Ej: Gasolinera Principal / V-30">
+                    </div>
+                    <div class="form-group">
+                        <label>Detalles del Incidente</label>
+                        <textarea id="incident-details" rows="3" placeholder="Descripción del aviso..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Enviar Registro al Sistema</button>
+                </form>
+                <h4 style="margin-top:20px;">Historial de Incidentes Activos</h4>
+                <div id="incident-feed"></div>
             </div>
         </div>
+    </div>
 
+    <!-- PESTAÑA 2: ANTECEDENTES Y CIUDADANOS -->
+    <div id="tab-ciudadanos" class="tab-content">
+        <div class="grid-container">
+            <div class="card">
+                <h3>Afiliar / Registrar Ciudadano</h3>
+                <form onsubmit="registerCitizen(event)">
+                    <div class="form-group">
+                        <label>Nombre del Jugador (Roblox User)</label>
+                        <input type="text" id="cit-name" required placeholder="Ej: JuanPerez_RL">
+                    </div>
+                    <div class="form-group">
+                        <label>DNI / Licencia</label>
+                        <input type="text" id="cit-dni" required placeholder="Ej: 12345678X">
+                    </div>
+                    <div class="form-group">
+                        <label>Estado de Licencia de Conducir</label>
+                        <select id="cit-license">
+                            <option value="VÁLIDA">VÁLIDA</option>
+                            <option value="SUSPENDIDA">SUSPENDIDA</option>
+                            <option value="RETIRADA">RETIRADA</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-submit">Guardar en Base de Datos</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Consulta de Antecedentes y Búsqueda</h3>
+                <div class="form-group">
+                    <input type="text" id="search-input" onkeyup="searchCitizen()" placeholder="Buscar por Nombre o DNI...">
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Jugador</th>
+                            <th>DNI</th>
+                            <th>Licencia</th>
+                            <th>Historial / Antecedentes</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="citizen-table">
+                        <!-- Ficha de Ejemplo predeterminada -->
+                        <tr>
+                            <td>Carlos_Val</td>
+                            <td>87654321B</td>
+                            <td><span style="color: var(--accent-green);">VÁLIDA</span></td>
+                            <td id="antecedents-87654321B">Sin antecedentes registrados.</td>
+                            <td><button onclick="addAntecedent('87654321B')" style="background:var(--accent-red); color:white; border:none; padding:5px 8px; border-radius:4px; cursor:pointer;">+ Antecedente</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- PESTAÑA 3: CÓDIGO PENAL -->
+    <div id="tab-penal" class="tab-content">
+        <div class="card">
+            <h3>Código Penal y Sanciones - Comunidad de Valencia</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Artículo / Delito</th>
+                        <th>Descripción</th>
+                        <th>Multa (€)</th>
+                        <th>Tiempo de Prisión / Arresto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Art. 101 - Exceso de Velocidad</strong></td>
+                        <td>Superar los límites de velocidad urbanos o en autovía.</td>
+                        <td>500 €</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 102 - Conducción Temeraria</strong></td>
+                        <td>Poner en peligro la vida de peatones u otros vehículos.</td>
+                        <td>1.500 €</td>
+                        <td>3 Minutos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 201 - Desobediencia a la Autoridad</strong></td>
+                        <td>No detenerse ante las señales de Policía o Guardia Civil.</td>
+                        <td>1.000 €</td>
+                        <td>2 Minutos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 202 - Fuga / Fuga de Arresto</strong></td>
+                        <td>Iniciar persecución evasiva ante las fuerzas de seguridad.</td>
+                        <td>2.500 €</td>
+                        <td>5 Minutos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 301 - Posesión de Armas Ilegales</strong></td>
+                        <td>Llevar armas de fuego sin la licencia correspondiente.</td>
+                        <td>3.000 €</td>
+                        <td>6 Minutos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art. 401 - Agresión a Agente de la Autoridad</strong></td>
+                        <td>Ataque físico o disparo a policías, bomberos o sanitarios.</td>
+                        <td>5.000 €</td>
+                        <td>10 Minutos</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
-        let currentDept = "PLV / CNP / GC";
-
-        function setDept(dept) {
-            currentDept = dept;
-            document.querySelectorAll('.btn-dept').forEach(b => b.classList.remove('active'));
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.btn-dept').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
             event.target.classList.add('active');
         }
 
         function sendStatus(status) {
-            const unit = document.getElementById('unit-id').value || "Unidad Sin Asignar";
             document.getElementById('current-status').innerText = status;
-
-            // Envío de Webhook a Discord (Opcional)
-            sendDiscordWebhook(`📢 **Cambio de Estado**\n**Servicio:** ${currentDept}\n**Unidad:** ${unit}\n**Estado:** ${status}`);
         }
 
         function submitIncident(e) {
@@ -228,25 +354,59 @@
             const feed = document.getElementById('incident-feed');
             const item = document.createElement('div');
             item.className = 'feed-item';
-            item.innerHTML = `<strong>[${type}]</strong> - ${location}<br><small>${details} | Registrado por: ${unit} (${currentDept})</small>`;
+            item.innerHTML = `<strong>[${type}]</strong> - ${location}<br><small>${details} | Registrado por: ${unit}</small>`;
             feed.prepend(item);
-
-            // Enviar alerta al Webhook de Discord
-            sendDiscordWebhook(`🚨 **NUEVO AVISO DE EMERGENCIA - 112 VALENCIA** 🚨\n**Tipo:** ${type}\n**Ubicación:** ${location}\n**Detalles:** ${details}\n**Generado por:** ${unit} (${currentDept})`);
 
             document.getElementById('incident-form').reset();
         }
 
-        function sendDiscordWebhook(message) {
-            // Reemplaza esta URL con la Webhook de tu canal de Discord
-            const webhookUrl = "TU_DISCORD_WEBHOOK_URL_AQUI"; 
-            
-            if(webhookUrl === "TU_DISCORD_WEBHOOK_URL_AQUI") return;
+        function registerCitizen(e) {
+            e.preventDefault();
+            const name = document.getElementById('cit-name').value;
+            const dni = document.getElementById('cit-dni').value;
+            const license = document.getElementById('cit-license').value;
 
-            fetch(webhookUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: message })
+            const table = document.getElementById('citizen-table');
+            const row = document.createElement('tr');
+            
+            const licenseColor = license === 'VÁLIDA' ? 'var(--accent-green)' : 'var(--accent-red)';
+
+            row.innerHTML = `
+                <td>${name}</td>
+                <td>${dni}</td>
+                <td><span style="color: ${licenseColor};">${license}</span></td>
+                <td id="antecedents-${dni}">Sin antecedentes registrados.</td>
+                <td><button onclick="addAntecedent('${dni}')" style="background:var(--accent-red); color:white; border:none; padding:5px 8px; border-radius:4px; cursor:pointer;">+ Antecedente</button></td>
+            `;
+            table.appendChild(row);
+            alert(`Jugador ${name} afiliado/registrado con éxito.`);
+            document.querySelector('#tab-ciudadanos form').reset();
+        }
+
+        function addAntecedent(dni) {
+            const crime = prompt("Introduce el delito o infracción cometida:");
+            if (crime) {
+                const cell = document.getElementById(`antecedents-${dni}`);
+                if (cell.innerText === "Sin antecedentes registrados.") {
+                    cell.innerText = crime;
+                } else {
+                    cell.innerText += `, ${crime}`;
+                }
+            }
+        }
+
+        function searchCitizen() {
+            const input = document.getElementById('search-input').value.toLowerCase();
+            const rows = document.querySelectorAll('#citizen-table tr');
+
+            rows.forEach(row => {
+                const name = row.cells[0].innerText.toLowerCase();
+                const dni = row.cells[1].innerText.toLowerCase();
+                if (name.includes(input) || dni.includes(input)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
             });
         }
     </script>
