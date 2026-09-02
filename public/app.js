@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // NAVEGACIÓN ENTRE MÓDULOS / PESTAÑAS
+    // CAMBIO DE PESTAÑAS Y VISTAS
     const moduleButtons = document.querySelectorAll('#module-nav .btn-module');
     const tabViews = document.querySelectorAll('.tab-view');
 
@@ -13,9 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             button.classList.add('active');
             const targetView = document.getElementById(targetId);
-            if (targetView) {
-                targetView.classList.add('active');
-            }
+            if (targetView) targetView.classList.add('active');
         });
     });
 
@@ -32,34 +30,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // ESTADOS OPERATIVOS
     const statusButtons = document.querySelectorAll('#status-selector .btn-status');
     const displayEstado = document.getElementById('display-estado');
-    const headerStatusBadge = document.getElementById('header-status-badge');
 
     statusButtons.forEach(button => {
         button.addEventListener('click', () => {
             statusButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
 
-            const code = button.dataset.code;
             const label = button.dataset.label;
-            const colorClass = button.dataset.color;
+            const className = button.dataset.class;
 
             if (displayEstado) {
                 displayEstado.textContent = label;
-                displayEstado.className = `metric-value ${colorClass}`;
-            }
-
-            if (headerStatusBadge) {
-                headerStatusBadge.textContent = `ESTADO DE UNIDAD ${code} ${label}`;
-                if (code === '10-8') {
-                    headerStatusBadge.className = 'status-badge status-online';
-                } else {
-                    headerStatusBadge.className = 'status-badge status-offline';
-                }
+                displayEstado.className = `metric-badge ${className}`;
             }
         });
     });
 
-    // FILTROS DE SERVICIO
+    // SERVICIOS
     const serviceButtons = document.querySelectorAll('#service-selector .btn-service');
     serviceButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -68,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // REGISTRO DE ALERTAS
+    // REGISTRO DE INCIDENCIAS
     const alertForm = document.getElementById('alert-form');
     const displayIncidenciasCount = document.getElementById('display-incidencias-count');
     let count = 0;
@@ -78,16 +65,16 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             count++;
             if (displayIncidenciasCount) displayIncidenciasCount.textContent = count;
-            alert('🚨 Incidencia registrada correctamente en la central PDA.');
+            alert('🚨 Registro enviado correctamente a la central.');
             alertForm.reset();
         });
     }
 
-    // BOTÓN SALIR
+    // SALIR
     const btnLogout = document.getElementById('btn-logout');
     if (btnLogout) {
         btnLogout.addEventListener('click', () => {
-            if (confirm('¿Cerrar sesión en la PDA?')) {
+            if (confirm('¿Cerrar sesión del sistema?')) {
                 location.reload();
             }
         });
