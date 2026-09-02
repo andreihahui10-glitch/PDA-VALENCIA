@@ -1,73 +1,132 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDA Centro de Coordinación de Emergencias 112 - Valencia</title>
+    <title>PDA Valencia · Centro de Coordinación 112</title>
         <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
+
 
     <!-- PANTALLA DE INICIO DE SESIÓN -->
     <div id="login-screen">
         <div class="login-card">
-            <h2>SISTEMA 112 - VALENCIA</h2>
-            <p style="color: #94a3b8; font-size: 0.9em; margin-bottom: 20px;">Selecciona el tipo de acceso</p>
+            <div class="login-brand">
+                <div class="brand-mark">112</div>
+                <div>
+                    <span class="eyebrow">GENERALITAT VALENCIANA</span>
+                    <h2>PDA VALENCIA</h2>
+                    <p>Centro de Coordinación de Emergencias</p>
+                </div>
+            </div>
+            <div class="login-divider"></div>
+            <div class="login-heading">
+                <span class="section-kicker">ACCESO SEGURO</span>
+                <h3>Identificación del operador</h3>
+                <p>Selecciona el perfil con el que quieres acceder al sistema.</p>
+            </div>
             
             <div class="login-btn-group">
-                <button type="button" class="login-role-btn active" id="btn-role-gov" onclick="selectRole('gov')">🏛️ Cuerpos del Estado</button>
-                <button type="button" class="login-role-btn" id="btn-role-cit" onclick="selectRole('cit')">👤 Ciudadano</button>
+                <button type="button" class="login-role-btn active" id="btn-role-gov" onclick="selectRole('gov')"><span class="role-icon">⌘</span><span><b>Cuerpos del Estado</b><small>Acceso operativo</small></span></button>
+                <button type="button" class="login-role-btn" id="btn-role-cit" onclick="selectRole('cit')"><span class="role-icon">○</span><span><b>Ciudadano</b><small>Consulta pública</small></span></button>
             </div>
 
             <form onsubmit="handleLogin(event)">
                 <div id="credentials-fields">
                     <div class="form-group">
-                        <label>Nombre de Usuario</label>
+                        <label for="username">Nombre de Usuario</label>
                         <input type="text" id="username" placeholder="Ingresa usuario">
                     </div>
                     
                     <div class="form-group">
-                        <label>Contraseña</label>
+                        <label for="password">Contraseña</label>
                         <input type="password" id="password" placeholder="••••••••">
                     </div>
                 </div>
 
                 <div id="login-error" class="error-message">Credenciales incorrectas para Cuerpos del Estado.</div>
 
-                <button type="submit" class="btn-submit" style="margin-top: 15px;">Ingresar al Sistema</button>
+                <button type="submit" class="btn-submit login-submit"><span>Acceder al sistema</span><span class="btn-arrow">→</span></button>
             </form>
+            <div class="login-footer"><span class="status-dot"></span> Sistema protegido · Conexión cifrada</div>
         </div>
     </div>
 
     <!-- APLICACIÓN PRINCIPAL -->
     <div class="main-app" id="main-app">
-        <div class="header app-header">
-            <div>
-                <h2>PDA CENTRO DE COORDINACIÓN DE EMERGENCIAS 112</h2>
-                <small>Acceso: <strong id="logged-user">---</strong> (<span id="logged-role-badge" class="badge-role">---</span>)</small>
+        <header class="header app-header">
+            <div class="header-brand">
+                <div class="mini-mark">112</div>
+                <div>
+                    <div class="header-title">PDA VALENCIA <span>/</span> CENTRO DE COORDINACIÓN</div>
+                    <div class="header-subtitle"><span class="live-dot"></span> Plataforma operativa · Valencia</div>
+                </div>
             </div>
-            <div>
-                <span id="gov-status-header">Estado: <strong id="current-status" style="color: #dc2626;">10-10 Fuera de Servicio</strong> | </span>
-                <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
+            <div class="header-actions">
+                <div class="operator-card">
+                    <div class="operator-avatar">OP</div>
+                    <div class="operator-info">
+                        <strong id="logged-user">---</strong>
+                        <span id="logged-role-badge" class="badge-role">---</span>
+                    </div>
+                </div>
+                <div class="header-status" id="gov-status-header">
+                    <span class="status-caption">ESTADO DE UNIDAD</span>
+                    <strong id="current-status" class="header-current-status">10-10 Fuera de Servicio</strong>
+                </div>
+                <button class="btn-logout" onclick="logout()" title="Cerrar sesión"><span>↪</span> Salir</button>
             </div>
-        </div>
+        </header>
 
-        <!-- Navegación General -->
-        <div class="dept-selector main-navigation">
-            <button class="btn-dept active gov-only" id="nav-despacho" onclick="switchTab(event, 'tab-despacho')">🎧 Despacho y Unidades</button>
-            <button class="btn-dept gov-only" id="nav-vehiculos" onclick="switchTab(event, 'tab-vehiculos')">🚘 Registro Vehículos / DGT</button>
-            <button class="btn-dept gov-only" id="nav-ciudadanos" onclick="switchTab(event, 'tab-ciudadanos')">👤 Base de Datos / Antecedentes</button>
-            <button class="btn-dept" id="nav-penal" onclick="switchTab(event, 'tab-penal')">📜 Código Penal Oficial</button>
-        </div>
+        <div class="app-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section-label">OPERATIVA</div>
+                <nav class="dept-selector main-navigation" aria-label="Navegación principal">
+            <button class="btn-dept active gov-only" id="nav-despacho" onclick="switchTab(event, 'tab-despacho')"><span class="nav-icon">◈</span><span>Despacho y Unidades</span></button>
+            <button class="btn-dept gov-only" id="nav-vehiculos" onclick="switchTab(event, 'tab-vehiculos')"><span class="nav-icon">▣</span><span>Vehículos / DGT</span></button>
+            <button class="btn-dept gov-only" id="nav-ciudadanos" onclick="switchTab(event, 'tab-ciudadanos')"><span class="nav-icon">◎</span><span>Antecedentes</span></button>
+            <button class="btn-dept" id="nav-penal" onclick="switchTab(event, 'tab-penal')"><span class="nav-icon">§</span><span>Código de Infracciones</span></button>
+                </nav>
+                <div class="sidebar-divider"></div>
+                <div class="sidebar-note">
+                    <span class="live-dot"></span>
+                    <div><strong>Sistema operativo</strong><small>Todos los servicios conectados</small></div>
+                </div>
+            </aside>
+
+            <main class="content-area">
+                <section class="dashboard-strip" aria-label="Resumen operativo">
+                    <div class="welcome-block">
+                        <span class="section-kicker">CENTRO DE CONTROL</span>
+                        <h1>Panel operativo</h1>
+                        <p>Gestiona unidades, incidencias y consultas desde un único lugar.</p>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-icon blue">◉</span>
+                        <div><small>UNIDAD ACTIVA</small><strong id="metric-unit">---</strong><span>Indicativo actual</span></div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-icon green">✓</span>
+                        <div><small>ESTADO</small><strong id="metric-status">Fuera de servicio</strong><span>Disponibilidad operativa</span></div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-icon amber">!</span>
+                        <div><small>INCIDENCIAS</small><strong id="metric-incidents">0</strong><span>Registradas en sesión</span></div>
+                    </div>
+                </section>
 
         <!-- PESTAÑA 1: DESPACHO Y UNIDADES -->
         <div id="tab-despacho" class="tab-content active">
-            <div class="dept-selector" style="margin-bottom: 15px;">
-                <button class="btn-dept" style="background:#0f172a;" onclick="setService('PLV / CNP / GC')">🚔 Cuerpos Policiales</button>
-                <button class="btn-dept" style="background:#0f172a;" onclick="setService('Bombers València')">🚒 Bomberos</button>
-                <button class="btn-dept" style="background:#0f172a;" onclick="setService('SAMU / SVB')">🚑 Emergencias Sanitarias</button>
-                <button class="btn-dept" style="background:#0f172a;" onclick="setService('Conservación Carreteras')">🚜 Conservación / Grúa</button>
-                <button class="btn-dept" style="background:#0f172a;" onclick="setService('Operador 112')">🎧 Operador 112</button>
+            <div class="service-tabs">
+                <div class="service-tabs-title">SERVICIO ACTIVO</div>
+                <button class="service-btn active" onclick="setService('PLV / CNP / GC')"><span>POL</span><b>Policial</b></button>
+                <button class="service-btn" onclick="setService('Bombers València')"><span>BOM</span><b>Bomberos</b></button>
+                <button class="service-btn" onclick="setService('SAMU / SVB')"><span>SAN</span><b>Sanitario</b></button>
+                <button class="service-btn" onclick="setService('Conservación Carreteras')"><span>CAR</span><b>Carreteras</b></button>
+                <button class="service-btn" onclick="setService('Operador 112')"><span>112</span><b>Operador</b></button>
             </div>
 
             <div class="grid-container">
@@ -478,6 +537,7 @@
                     </tbody>
                 </table>
             </div>
+            </main>
         </div>
     </div>
 
@@ -539,6 +599,8 @@
 
             roleBadge.innerText = roleText;
             roleBadge.style.background = roleColor;
+            const metricUnit = document.getElementById('metric-unit');
+            if (metricUnit) metricUnit.innerText = 'VALENCIAPDA';
 
             if (currentRole === 'gov') {
                 govStatusHeader.style.display = "inline";
@@ -584,6 +646,11 @@
         function sendStatus(status) {
             const statusText = document.getElementById('current-status');
             statusText.innerText = status;
+            const metricStatus = document.getElementById('metric-status');
+            if (metricStatus) metricStatus.innerText = status.replace(/^10-\d+\s*/, '');
+            const unitMetric = document.getElementById('metric-unit');
+            const unitField = document.getElementById('unit-id');
+            if (unitMetric && unitField) unitMetric.innerText = unitField.value.trim() || 'VALENCIAPDA';
 
             if (status.includes('10-8') || status.includes('10-23') || status.includes('10-97')) {
                 statusText.style.color = "#16a34a";
@@ -599,11 +666,17 @@
             const details = document.getElementById('incident-details').value;
             const unit = document.getElementById('unit-id').value || "VALENCIAPDA";
 
+            const metricUnit = document.getElementById('metric-unit');
+            if (metricUnit) metricUnit.innerText = unit;
+
             const feed = document.getElementById('incident-feed');
             const item = document.createElement('div');
             item.className = 'feed-item';
             item.innerHTML = `<strong>[${type}]</strong> - ${location}<br><small>${details} | Registrado por: ${unit} (${currentDept})</small>`;
             feed.prepend(item);
+
+            const metricIncidents = document.getElementById('metric-incidents');
+            if (metricIncidents) metricIncidents.innerText = feed.children.length;
 
             document.getElementById('incident-form').reset();
         }
@@ -737,5 +810,6 @@
             });
         }
     </script>
+
 </body>
 </html>
