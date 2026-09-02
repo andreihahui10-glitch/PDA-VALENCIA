@@ -3,152 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDA Valencia - Plataforma Digital de Apoyo</title>
-    <!-- Fuente Inter desde Google Fonts -->
+    <title>PDA Valencia - Centro de Coordinación de Emergencias</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Hojas de estilo -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <!-- Encabezado / Navegación -->
-    <header class="navbar">
-        <div class="container nav-container">
-            <a href="#" class="brand-logo">
-                <span class="logo-icon">📍</span>
-                <span class="logo-text">PDA <strong>Valencia</strong></span>
-            </a>
-            <nav class="nav-links">
-                <a href="#inicio">Inicio</a>
-                <a href="#servicios">Servicios</a>
-                <a href="#nosotros">Nosotros</a>
-                <a href="#contacto" class="btn btn-outline">Contacto</a>
-                <a href="#acceso" class="btn btn-primary">Acceder</a>
-            </nav>
+    <!-- Encabezado Institucional -->
+    <header class="top-bar">
+        <div class="brand">
+            <span class="emergency-badge">112</span>
+            <div>
+                <span class="sub-title">GENERALITAT VALENCIANA</span>
+                <h1 class="main-title">PDA VALENCIA</h1>
+                <span class="center-title">Centro de Coordinación de Emergencias</span>
+            </div>
+        </div>
+        <div class="system-status">
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span>Sistema Operativo</span>
+            </div>
+            <span class="sub-status">Todos los servicios conectados · Conexión cifrada</span>
         </div>
     </header>
 
-    <!-- Sección Hero (Principal) -->
-    <section id="inicio" class="hero-section">
-        <div class="container hero-container">
-            <div class="hero-content">
-                <span class="badge">Plataforma Digital de Apoyo</span>
-                <h1>Innovación y Gestión Digital para <span>Valencia</span></h1>
-                <p>Una herramienta centralizada diseñada para optimizar la gestión, coordinación y comunicación eficiente de servicios y recursos locales.</p>
-                <div class="hero-actions">
-                    <a href="#acceso" class="btn btn-primary btn-large">Comenzar Ahora</a>
-                    <a href="#servicios" class="btn btn-secondary btn-large">Saber Más</a>
+    <div class="app-layout">
+        
+        <!-- Panel Izquierdo: Acceso e Identificación -->
+        <aside class="sidebar">
+            <div class="card login-card">
+                <div class="card-header">
+                    <h2>ACCESO SEGURO</h2>
+                    <span class="badge">Identificación del operador</span>
                 </div>
-            </div>
-            <div class="hero-card">
-                <div class="card-preview">
-                    <div class="status-indicator">
-                        <span class="dot pulse"></span>
-                        <span>Sistema Activo en Tiempo Real</span>
-                    </div>
-                    <div class="metric-grid">
-                        <div class="metric-item">
-                            <span class="metric-value">+100%</span>
-                            <span class="metric-label">Disponible</span>
-                        </div>
-                        <div class="metric-item">
-                            <span class="metric-value">Fast</span>
-                            <span class="metric-label">Respuesta</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Sección de Funcionalidades / Servicios -->
-    <section id="servicios" class="services-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Servicios y Características</h2>
-                <p>Todo lo que necesitas centralizado en una sola plataforma ágil y moderna.</p>
-            </div>
-
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-icon">⚡</div>
-                    <h3>Gestión Eficiente</h3>
-                    <p>Optimiza los procesos principales reduciendo los tiempos de respuesta e interacción.</p>
+                <p class="instruction">Selecciona el perfil con el que quieres acceder al sistema.</p>
+                
+                <div class="role-selector">
+                    <button type="button" class="btn-role active">
+                        <strong>Cuerpos del Estado</strong>
+                        <small>Acceso operativo</small>
+                    </button>
+                    <button type="button" class="btn-role">
+                        <strong>Ciudadano</strong>
+                        <small>Consulta pública</small>
+                    </button>
                 </div>
 
-                <div class="card">
-                    <div class="card-icon">🔒</div>
-                    <h3>Seguridad Garantizada</h3>
-                    <p>Protección y almacenamiento seguro de datos mediante protocolos actualizados.</p>
-                </div>
-
-                <div class="card">
-                    <div class="card-icon">📊</div>
-                    <h3>Análisis en Tiempo Real</h3>
-                    <p>Visualiza estadísticas e métricas actualizadas para una toma de decisiones informada.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Sección Nosotros / Información -->
-    <section id="nosotros" class="about-section">
-        <div class="container about-container">
-            <div class="about-text">
-                <h2>Sobre la Plataforma PDA Valencia</h2>
-                <p>Diseñada con el compromiso de modernizar la interacción con los servicios digitales de la región, esta plataforma integra tecnologías web rápidas y seguras para brindar una experiencia de usuario ágil y accesible.</p>
-                <ul class="feature-list">
-                    <li>✓ Interfaz optimizada para móviles y dispositivos de escritorio.</li>
-                    <li>✓ Integración rápida con el servidor Node.js/Express.</li>
-                    <li>✓ Arquitectura orientada a la seguridad y escalabilidad.</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- Sección Formulario / Contacto -->
-    <section id="contacto" class="contact-section">
-        <div class="container">
-            <div class="form-wrapper">
-                <div class="form-header">
-                    <h2>Contáctanos</h2>
-                    <p>¿Tienes dudas o sugerencias? Envíanos un mensaje y te responderemos a la brevedad.</p>
-                </div>
-                <form class="contact-form" action="#" method="POST" onsubmit="event.preventDefault();">
+                <form class="login-form" onsubmit="event.preventDefault();">
                     <div class="form-group">
-                        <label for="nombre">Nombre completo</label>
-                        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+                        <label for="usuario">Nombre de Usuario</label>
+                        <input type="text" id="usuario" placeholder="Ingresa usuario">
                     </div>
-
                     <div class="form-group">
-                        <label for="email">Correo electrónico</label>
-                        <input type="email" id="email" name="email" placeholder="ejemplo@dominio.com" required>
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" value="••••••••">
                     </div>
-
-                    <div class="form-group">
-                        <label for="mensaje">Mensaje</label>
-                        <textarea id="mensaje" name="mensaje" rows="4" placeholder="Escribe tu mensaje aquí..." required></textarea>
+                    <div class="alert-box error">
+                        <span>⚠️ Credenciales incorrectas para Cuerpos del Estado.</span>
                     </div>
-
-                    <button type="submit" class="btn btn-primary btn-block">Enviar Mensaje</button>
+                    <button type="submit" class="btn btn-primary btn-block">Acceder al sistema →</button>
                 </form>
-            </div>
-        </div>
-    </section>
 
-    <!-- Pie de página -->
-    <footer class="footer">
-        <div class="container footer-container">
-            <p>&copy; 2026 PDA Valencia. Todos los derechos reservados.</p>
-            <div class="footer-links">
-                <a href="#">Privacidad</a>
-                <a href="#">Términos de servicio</a>
-                <a href="#">Soporte</a>
+                <div class="card-footer">
+                    <span>Sistema protegido · Conexión cifrada</span>
+                </div>
             </div>
-        </div>
-    </footer>
+        </aside>
+
+        <!-- Contenido Principal / Panel Operativo -->
+        <main class="main-content">
+            
+            <!-- Barra Superior de Navegación Operativa -->
+            <section class="nav-toolbar">
+                <div class="toolbar-section">
+                    <span class="nav-tag">112 PDA VALENCIA</span>
+                    <span class="nav-subtag">CENTRO DE COORDINACIÓN</span>
+                    <span class="nav-info">Plataforma operativa · Valencia OP</span>
+                </div>
+                <div class="toolbar-status">
+                    <span class="status-badge status-offline">ESTADO DE UNIDAD 10-10 Fuera de Servicio</span>
+                    <button class="btn btn-outline btn-sm">↳ Salir</button>
+                </div>
+            </section>
+
+            <!-- Menú Modulos Tácticos -->
+            <nav class="module-nav">
+                <button class="btn-module active">❖ Despacho y Unidades</button>
+                <button class="btn-module">◫ Vehículos / DGT</button>
+                <button class="btn-module">⊙ Antecedentes</button>
+                <button class="btn-module">§ Código de Infracciones</button>
+            </nav>
+
+            <!-- Resumen del Panel Operativo -->
+            <section class="card dashboard-card">
+                <div class="dashboard-header">
+                    <div>
+                        <h2>Panel operativo</h2>
+                        <p>Gestiona unidades, incidencias y consultas desde un único lugar.</p>
+                    </div>
+                    <div class="control-center-tag">
+                        <span>CENTRO DE CONTROL</span>
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">⦿</div>
+                        <div class="metric-info">
+                            <span class="metric-label">UNIDAD ACTIVA</span>
+                            <span class="metric-value">---</span>
+                            <span class="metric-sub">Indicativo actual</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon text-warning">✓</div>
+                        <div class="metric-info">
+                            <span class="metric-label">ESTADO</span>
+                            <span class="metric-value text-danger">Fuera de servicio</span>
+                            <span class="metric-sub">Disponibilidad operativa</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon text-info">!</div>
+                        <div class="metric-info">
+                            <span class="metric-label">INCIDENCIAS</span>
+                            <span class="metric-value">0</span>
+                            <span class="metric-sub">Registradas en sesión</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filtro por Servicio Activo -->
+                <div class="service-filters">
+                    <span class="filter-label">SERVICIO ACTIVO:</span>
+                    <div class="filter-buttons">
+                        <button class="btn-service active">POL <span>Policial</span></button>
+                        <button class="btn-service">BOM <span>Bomberos</span></button>
+                        <button class="btn-service">SAN <span>Sanitario</span></button>
+                        <button class="btn-service">CAR <span>Carreteras</span></button>
+                        <button class="btn-service">112 <span>Operador</span></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Gestión de Unidad y Alertas -->
+            <div class="grid-two-columns">
+                
+                <!-- Gestión de Unidad -->
+                <section class="card">
+                    <div class="card-header">
+                        <h3>Gestión de Unidad</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="indicativo">Indicativo de Unidad (Ej: METRO-10, SAMU-1, B-12)</label>
+                        <input type="text" id="indicativo" placeholder="Ingresa tu clave de unidad">
+                    </div>
+
+                    <label class="section-label">Estado Operativo</label>
+                    <div class="status-buttons-grid">
+                        <button class="btn-status status-108">10-8 Disponible</button>
+                        <button class="btn-status status-1023">10-23 En Camino</button>
+                        <button class="btn-status status-1097">10-97 En Escena</button>
+                        <button class="btn-status status-1010 active">10-10 Fuera de Servicio</button>
+                    </div>
+                </section>
+
+                <!-- Crear Registro / Alerta 112 -->
+                <section class="card">
+                    <div class="card-header">
+                        <h3>Crear Registro / Alerta 112</h3>
+                    </div>
+                    <form class="alert-form" onsubmit="event.preventDefault();">
+                        <div class="form-group">
+                            <label for="tipo-incidencia">Tipo de Emergencia / Incidencia</label>
+                            <select id="tipo-incidencia">
+                                <option>Accidente de Tráfico</option>
+                                <option>Incendio Urbano / Forestal</option>
+                                <option>Asistencia Sanitaria Urgente</option>
+                                <option>Alteración del Orden Público</option>
+                                <option>Robo / Atraco en Proceso</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ubicacion">Ubicación / Zona</label>
+                            <input type="text" id="ubicacion" placeholder="Ej: Carretera Principal frente a N-332">
+                        </div>
+                        <div class="form-group">
+                            <label for="detalles">Detalles del Incidente</label>
+                            <textarea id="detalles" rows="3" placeholder="Descripción de los hechos y unidades requeridas..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Enviar Registro al Sistema</button>
+                    </form>
+                </section>
+
+            </div>
+
+        </main>
+    </div>
 
 </body>
 </html>
