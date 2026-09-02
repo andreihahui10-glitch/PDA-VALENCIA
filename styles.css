@@ -1,10 +1,39 @@
-.text-success { color: var(--accent-green) !important; }
-.text-info { color: var(--accent-cyan) !important; }
-.text-warning { color: var(--accent-amber) !important; }
-.text-danger { color: var(--accent-red) !important; }
+/* Control de visibilidad de pestañas */
+.tab-view {
+    display: none;
+}
 
-.status-online {
-    background: rgba(16, 185, 129, 0.2);
-    color: var(--accent-green);
-    border: 1px solid var(--accent-green);
+.tab-view.active {
+    display: block;
+}
+
+/* Tablas de datos para Infracciones */
+.table-container {
+    overflow-x: auto;
+    margin-top: 10px;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+.data-table th {
+    background-color: var(--bg-input);
+    color: var(--text-secondary);
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.search-box-group {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
 }
