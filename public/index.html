@@ -6,282 +6,209 @@
     <title>PDA Valencia - Centro de Coordinación de Emergencias</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <!-- Encabezado Institucional -->
     <header class="top-bar">
         <div class="brand">
             <span class="emergency-badge">112</span>
-            <div>
+            <div class="brand-info">
                 <span class="sub-title">GENERALITAT VALENCIANA</span>
                 <h1 class="main-title">PDA VALENCIA</h1>
-                <span class="center-title">Centro de Coordinación de Emergencias</span>
             </div>
         </div>
+
+        <nav class="module-nav" id="module-nav">
+            <button class="btn-module active" data-target="view-despacho">❖ Despacho</button>
+            <button class="btn-module" data-target="view-vehiculos">◫ Vehículos / DGT</button>
+            <button class="btn-module" data-target="view-antecedentes">⊙ Antecedentes</button>
+            <button class="btn-module" data-target="view-infracciones">§ Infracciones</button>
+        </nav>
+
         <div class="system-status">
             <div class="status-indicator">
                 <span class="status-dot"></span>
-                <span>Sistema Operativo</span>
+                <span>SISTEMA CONECTADO</span>
             </div>
-            <span class="sub-status">Todos los servicios conectados · Conexión cifrada</span>
+            <button class="btn-logout" id="btn-logout">Salir ↳</button>
         </div>
     </header>
 
-    <div class="app-layout">
-        
-        <!-- Sidebar Izquierda: Acceso -->
-        <aside class="sidebar">
-            <div class="card login-card">
-                <div class="card-header">
-                    <h2>ACCESO SEGURO</h2>
-                    <span class="badge">Identificación del operador</span>
-                </div>
-                <p class="instruction">Selecciona el perfil con el que quieres acceder al sistema.</p>
-                
-                <div class="role-selector" id="role-selector">
-                    <button type="button" class="btn-role active" data-role="cuerpos">
-                        <strong>Cuerpos del Estado</strong>
-                        <small>Acceso operativo</small>
-                    </button>
-                    <button type="button" class="btn-role" data-role="ciudadano">
-                        <strong>Ciudadano</strong>
-                        <small>Consulta pública</small>
-                    </button>
-                </div>
+    <main class="main-container">
 
-                <form class="login-form" id="login-form">
-                    <div class="form-group">
-                        <label for="usuario">Nombre de Usuario</label>
-                        <input type="text" id="usuario" placeholder="Ingresa usuario" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Contraseña</label>
-                        <input type="password" id="password" placeholder="••••••••" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Acceder al sistema →</button>
-                </form>
-
-                <div class="card-footer">
-                    <span>Sistema protegido · Conexión cifrada</span>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Panel Principal -->
-        <main class="main-content">
+        <!-- ================= PESTAÑA 1: DESPACHO ================= -->
+        <div id="view-despacho" class="tab-view active">
             
-            <!-- Barra Superior Nav -->
-            <section class="nav-toolbar">
-                <div class="toolbar-section">
-                    <span class="nav-tag">112 PDA VALENCIA</span>
-                    <span class="nav-subtag">CENTRO DE COORDINACIÓN</span>
-                    <span class="nav-info">Plataforma operativa · Valencia OP</span>
+            <section class="metrics-bar">
+                <div class="metric-card">
+                    <span class="metric-label">OPERADOR ACTUAL</span>
+                    <span class="metric-value text-accent">POL-VAL-402</span>
                 </div>
-                <div class="toolbar-status">
-                    <span class="status-badge status-offline" id="header-status-badge">ESTADO DE UNIDAD 10-10 Fuera de Servicio</span>
-                    <button class="btn btn-outline btn-sm" id="btn-logout">↳ Salir</button>
+                <div class="metric-card">
+                    <span class="metric-label">INDICATIVO UNIDAD</span>
+                    <span class="metric-value" id="display-indicativo">---</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">ESTADO OPERATIVO</span>
+                    <span class="metric-badge status-offline" id="display-estado">10-10 FUERA DE SERVICIO</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">INCIDENCIAS ACTIVAS</span>
+                    <span class="metric-value" id="display-incidencias-count">0</span>
                 </div>
             </section>
 
-            <!-- Menú Módulos -->
-            <nav class="module-nav" id="module-nav">
-                <button class="btn-module active" data-target="view-despacho">❖ Despacho y Unidades</button>
-                <button class="btn-module" data-target="view-vehiculos">◫ Vehículos / DGT</button>
-                <button class="btn-module" data-target="view-antecedentes">⊙ Antecedentes</button>
-                <button class="btn-module" data-target="view-infracciones">§ Código de Infracciones</button>
-            </nav>
-
-            <!-- ================= PESTAÑA 1: DESPACHO ================= -->
-            <div id="view-despacho" class="tab-view active">
-                <section class="card dashboard-card">
-                    <div class="dashboard-header">
-                        <div>
-                            <h2>Panel operativo</h2>
-                            <p>Gestiona unidades, incidencias y consultas desde un único lugar.</p>
-                        </div>
-                        <div class="control-center-tag">
-                            <span>CENTRO DE CONTROL</span>
-                        </div>
+            <div class="workspace-grid">
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Gestión de Unidad y Estado</h2>
                     </div>
-
-                    <div class="metrics-grid">
-                        <div class="metric-card">
-                            <div class="metric-icon">⦿</div>
-                            <div class="metric-info">
-                                <span class="metric-label">UNIDAD ACTIVA</span>
-                                <span class="metric-value" id="display-indicativo">---</span>
-                                <span class="metric-sub">Indicativo actual</span>
-                            </div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-icon text-warning">✓</div>
-                            <div class="metric-info">
-                                <span class="metric-label">ESTADO</span>
-                                <span class="metric-value text-danger" id="display-estado">Fuera de servicio</span>
-                                <span class="metric-sub">Disponibilidad operativa</span>
-                            </div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-icon text-info">!</div>
-                            <div class="metric-info">
-                                <span class="metric-label">INCIDENCIAS</span>
-                                <span class="metric-value" id="display-incidencias-count">0</span>
-                                <span class="metric-sub">Registradas en sesión</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="service-filters">
-                        <span class="filter-label">SERVICIO ACTIVO:</span>
-                        <div class="filter-buttons" id="service-selector">
-                            <button class="btn-service active">POL <span>Policial</span></button>
-                            <button class="btn-service">BOM <span>Bomberos</span></button>
-                            <button class="btn-service">SAN <span>Sanitario</span></button>
-                            <button class="btn-service">CAR <span>Carreteras</span></button>
-                            <button class="btn-service">112 <span>Operador</span></button>
-                        </div>
-                    </div>
-                </section>
-
-                <div class="grid-two-columns">
-                    <section class="card">
-                        <div class="card-header">
-                            <h3>Gestión de Unidad</h3>
-                        </div>
+                    <div class="panel-body">
                         <div class="form-group">
-                            <label for="indicativo">Indicativo de Unidad (Ej: METRO-10, SAMU-1, B-12)</label>
-                            <input type="text" id="indicativo" placeholder="Ingresa tu clave de unidad">
+                            <label for="indicativo">Asignar Indicativo de Unidad</label>
+                            <input type="text" id="indicativo" placeholder="Ej: METRO-10, SAMU-01, B-12" autocomplete="off">
                         </div>
 
-                        <label class="section-label">Estado Operativo</label>
-                        <div class="status-buttons-grid" id="status-selector">
-                            <button class="btn-status status-108" data-code="10-8" data-label="Disponible" data-color="text-success">10-8 Disponible</button>
-                            <button class="btn-status status-1023" data-code="10-23" data-label="En Camino" data-color="text-info">10-23 En Camino</button>
-                            <button class="btn-status status-1097" data-code="10-97" data-label="En Escena" data-color="text-warning">10-97 En Escena</button>
-                            <button class="btn-status status-1010 active" data-code="10-10" data-label="Fuera de Servicio" data-color="text-danger">10-10 Fuera de Servicio</button>
-                        </div>
-                    </section>
-
-                    <section class="card">
-                        <div class="card-header">
-                            <h3>Crear Registro / Alerta 112</h3>
-                        </div>
-                        <form class="alert-form" id="alert-form">
-                            <div class="form-group">
-                                <label for="tipo-incidencia">Tipo de Emergencia / Incidencia</label>
-                                <select id="tipo-incidencia">
-                                    <option>Accidente de Tráfico</option>
-                                    <option>Incendio Urbano / Forestal</option>
-                                    <option>Asistencia Sanitaria Urgente</option>
-                                    <option>Alteración del Orden Público</option>
-                                </select>
+                        <div class="form-group">
+                            <label>Cuerpo de Servicio</label>
+                            <div class="service-selector" id="service-selector">
+                                <button class="btn-service active">POL <span>Policial</span></button>
+                                <button class="btn-service">BOM <span>Bomberos</span></button>
+                                <button class="btn-service">SAN <span>Sanitario</span></button>
                             </div>
-                            <div class="form-group">
-                                <label for="ubicacion">Ubicación / Zona</label>
-                                <input type="text" id="ubicacion" placeholder="Ej: Carretera Principal frente a N-332" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Cambiar Estado de Unidad</label>
+                            <div class="status-grid" id="status-selector">
+                                <button class="btn-status btn-108" data-code="10-8" data-label="10-8 DISPONIBLE" data-class="status-online">10-8 Disponible</button>
+                                <button class="btn-status btn-1023" data-code="10-23" data-label="10-23 EN CAMINO" data-class="status-info">10-23 En Camino</button>
+                                <button class="btn-status btn-1097" data-code="10-97" data-label="10-97 EN ESCENA" data-class="status-warning">10-97 En Escena</button>
+                                <button class="btn-status btn-1010 active" data-code="10-10" data-label="10-10 FUERA DE SERVICIO" data-class="status-offline">10-10 Fuera de Servicio</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Crear Registro / Alerta 112</h2>
+                    </div>
+                    <div class="panel-body">
+                        <form id="alert-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="tipo-incidencia">Tipo de Emergencia</label>
+                                    <select id="tipo-incidencia">
+                                        <option>Accidente de Tráfico</option>
+                                        <option>Incendio Urbano / Forestal</option>
+                                        <option>Asistencia Sanitaria Urgente</option>
+                                        <option>Alteración del Orden Público</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ubicacion">Ubicación / Zona</label>
+                                    <input type="text" id="ubicacion" placeholder="Ej: Av. Blasco Ibáñez 42" required>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="detalles">Detalles del Incidente</label>
-                                <textarea id="detalles" rows="3" placeholder="Descripción de los hechos..." required></textarea>
+                                <textarea id="detalles" rows="4" placeholder="Descripción clara de los hechos y recursos desplegados..." required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block">Enviar Registro al Sistema</button>
+                            <button type="submit" class="btn btn-primary btn-block">Enviar Alerta al Centro de Control</button>
                         </form>
-                    </section>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= PESTAÑA 2: VEHÍCULOS / DGT ================= -->
+        <div id="view-vehiculos" class="tab-view">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Consulta de Vehículos (Base de Datos DGT)</h2>
+                </div>
+                <div class="panel-body">
+                    <form class="search-bar" onsubmit="event.preventDefault(); alert('Consultando base de datos DGT...');">
+                        <input type="text" placeholder="Ingrese Matrícula (Ej: 1234-BBB) o Bastidor VIN..." required>
+                        <button type="submit" class="btn btn-primary">Buscar Registro</button>
+                    </form>
                 </div>
             </div>
+        </div>
 
-            <!-- ================= PESTAÑA 2: VEHÍCULOS / DGT ================= -->
-            <div id="view-vehiculos" class="tab-view">
-                <section class="card">
-                    <div class="card-header">
-                        <h2>Consulta de Vehículos / DGT</h2>
-                        <span class="badge">Registro DGT</span>
-                    </div>
-                    <form class="search-box-group" onsubmit="event.preventDefault(); alert('Consultando matrícula en DGT...');">
-                        <div class="form-group">
-                            <label for="matricula">Matrícula o N.º Bastidor</label>
-                            <input type="text" id="matricula" placeholder="Ej: 1234-BBB">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Buscar Vehículo</button>
+        <!-- ================= PESTAÑA 3: ANTECEDENTES ================= -->
+        <div id="view-antecedentes" class="tab-view">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Consulta de Antecedentes Policiales</h2>
+                </div>
+                <div class="panel-body">
+                    <form class="search-bar" onsubmit="event.preventDefault(); alert('Buscando antecedentes...');">
+                        <input type="text" placeholder="Ingrese DNI, NIE o Nombre Completo..." required>
+                        <button type="submit" class="btn btn-primary">Consultar Ficha</button>
                     </form>
-                </section>
+                </div>
             </div>
+        </div>
 
-            <!-- ================= PESTAÑA 3: ANTECEDENTES ================= -->
-            <div id="view-antecedentes" class="tab-view">
-                <section class="card">
-                    <div class="card-header">
-                        <h2>Búsqueda de Antecedentes y Personas</h2>
-                        <span class="badge">Acceso Restringido</span>
-                    </div>
-                    <form class="search-box-group" onsubmit="event.preventDefault(); alert('Consultando base de datos...');">
-                        <div class="form-group">
-                            <label for="dni">DNI / NIE / Documento de Identidad</label>
-                            <input type="text" id="dni" placeholder="Ej: 12345678X">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Consultar Antecedentes</button>
-                    </form>
-                </section>
+        <!-- ================= PESTAÑA 4: INFRACCIONES ================= -->
+        <div id="view-infracciones" class="tab-view">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Código de Infracciones y Sanciones</h2>
+                </div>
+                <div class="panel-body">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción de la Infracción</th>
+                                <th>Gravedad</th>
+                                <th>Sanción</th>
+                                <th>Puntos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="code-tag">ART-012</span></td>
+                                <td>Conducción bajo efectos del alcohol (&gt;0.25 mg/l)</td>
+                                <td><span class="badge badge-danger">Muy Grave</span></td>
+                                <td>500 €</td>
+                                <td class="text-danger">-4 Ptos</td>
+                            </tr>
+                            <tr>
+                                <td><span class="code-tag">ART-045</span></td>
+                                <td>Uso manual del teléfono móvil durante la conducción</td>
+                                <td><span class="badge badge-warning">Grave</span></td>
+                                <td>200 €</td>
+                                <td class="text-danger">-6 Ptos</td>
+                            </tr>
+                            <tr>
+                                <td><span class="code-tag">ART-089</span></td>
+                                <td>No hacer uso del cinturón de seguridad</td>
+                                <td><span class="badge badge-warning">Grave</span></td>
+                                <td>200 €</td>
+                                <td class="text-danger">-4 Ptos</td>
+                            </tr>
+                            <tr>
+                                <td><span class="code-tag">ART-104</span></td>
+                                <td>Estacionamiento en carril bus o zona reservada</td>
+                                <td><span class="badge badge-info">Leve</span></td>
+                                <td>90 €</td>
+                                <td>0 Ptos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+        </div>
 
-            <!-- ================= PESTAÑA 4: CÓDIGO DE INFRACCIONES ================= -->
-            <div id="view-infracciones" class="tab-view">
-                <section class="card">
-                    <div class="card-header">
-                        <h2>Código de Infracciones y Sanciones</h2>
-                        <span class="badge">Reglamento General de Tráfico</span>
-                    </div>
-                    <div class="table-container">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Infracción</th>
-                                    <th>Gravedad</th>
-                                    <th>Sanción</th>
-                                    <th>Puntos</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>ART-012</strong></td>
-                                    <td>Conducción bajo efectos del alcohol (&gt;0.25 mg/l)</td>
-                                    <td><span class="text-danger">Muy Grave</span></td>
-                                    <td>500 €</td>
-                                    <td>-4 Puntos</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>ART-045</strong></td>
-                                    <td>Uso del teléfono móvil al volante</td>
-                                    <td><span class="text-warning">Grave</span></td>
-                                    <td>200 €</td>
-                                    <td>-6 Puntos</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>ART-089</strong></td>
-                                    <td>No utilizar el cinturón de seguridad</td>
-                                    <td><span class="text-warning">Grave</span></td>
-                                    <td>200 €</td>
-                                    <td>-4 Puntos</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>ART-104</strong></td>
-                                    <td>Estacionamiento en zona no permitida</td>
-                                    <td><span class="text-info">Leve</span></td>
-                                    <td>90 €</td>
-                                    <td>0 Puntos</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-            </div>
-
-        </main>
-    </div>
+    </main>
 
     <script src="app.js"></script>
 </body>
