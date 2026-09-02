@@ -24,7 +24,7 @@
         <div class="system-status">
             <div class="status-indicator">
                 <span class="status-dot"></span>
-                <span>Sistema Operativo</span>
+                <span id="label-sistema-estado">Sistema Operativo</span>
             </div>
             <span class="sub-status">Todos los servicios conectados · Conexión cifrada</span>
         </div>
@@ -41,30 +41,30 @@
                 </div>
                 <p class="instruction">Selecciona el perfil con el que quieres acceder al sistema.</p>
                 
-                <div class="role-selector">
-                    <button type="button" class="btn-role active">
+                <div class="role-selector" id="role-selector">
+                    <button type="button" class="btn-role active" data-role="cuerpos">
                         <strong>Cuerpos del Estado</strong>
                         <small>Acceso operativo</small>
                     </button>
-                    <button type="button" class="btn-role">
+                    <button type="button" class="btn-role" data-role="ciudadano">
                         <strong>Ciudadano</strong>
                         <small>Consulta pública</small>
                     </button>
                 </div>
 
-                <form class="login-form" onsubmit="event.preventDefault();">
+                <form class="login-form" id="login-form">
                     <div class="form-group">
                         <label for="usuario">Nombre de Usuario</label>
-                        <input type="text" id="usuario" placeholder="Ingresa usuario">
+                        <input type="text" id="usuario" placeholder="Ingresa usuario" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Contraseña</label>
-                        <input type="password" id="password" value="••••••••">
+                        <input type="password" id="password" placeholder="••••••••" required>
                     </div>
-                    <div class="alert-box error">
-                        <span>⚠️ Credenciales incorrectas para Cuerpos del Estado.</span>
+                    <div class="alert-box error" id="login-alert" style="display: none;">
+                        <span id="login-alert-text">⚠️ Credenciales incorrectas.</span>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">Acceder al sistema →</button>
+                    <button type="submit" class="btn btn-primary btn-block" id="btn-login">Acceder al sistema →</button>
                 </form>
 
                 <div class="card-footer">
@@ -84,25 +84,25 @@
                     <span class="nav-info">Plataforma operativa · Valencia OP</span>
                 </div>
                 <div class="toolbar-status">
-                    <span class="status-badge status-offline">ESTADO DE UNIDAD 10-10 Fuera de Servicio</span>
-                    <button class="btn btn-outline btn-sm">↳ Salir</button>
+                    <span class="status-badge status-offline" id="header-status-badge">ESTADO DE UNIDAD 10-10 Fuera de Servicio</span>
+                    <button class="btn btn-outline btn-sm" id="btn-logout">↳ Salir</button>
                 </div>
             </section>
 
-            <!-- Menú Modulos Tácticos -->
-            <nav class="module-nav">
-                <button class="btn-module active">❖ Despacho y Unidades</button>
-                <button class="btn-module">◫ Vehículos / DGT</button>
-                <button class="btn-module">⊙ Antecedentes</button>
-                <button class="btn-module">§ Código de Infracciones</button>
+            <!-- Menú Módulos Tácticos -->
+            <nav class="module-nav" id="module-nav">
+                <button class="btn-module active" data-tab="despacho">❖ Despacho y Unidades</button>
+                <button class="btn-module" data-tab="vehiculos">◫ Vehículos / DGT</button>
+                <button class="btn-module" data-tab="antecedentes">⊙ Antecedentes</button>
+                <button class="btn-module" data-tab="infracciones">§ Código de Infracciones</button>
             </nav>
 
             <!-- Resumen del Panel Operativo -->
             <section class="card dashboard-card">
                 <div class="dashboard-header">
                     <div>
-                        <h2>Panel operativo</h2>
-                        <p>Gestiona unidades, incidencias y consultas desde un único lugar.</p>
+                        <h2 id="section-title">Panel operativo</h2>
+                        <p id="section-desc">Gestiona unidades, incidencias y consultas desde un único lugar.</p>
                     </div>
                     <div class="control-center-tag">
                         <span>CENTRO DE CONTROL</span>
@@ -114,7 +114,7 @@
                         <div class="metric-icon">⦿</div>
                         <div class="metric-info">
                             <span class="metric-label">UNIDAD ACTIVA</span>
-                            <span class="metric-value">---</span>
+                            <span class="metric-value" id="display-indicativo">---</span>
                             <span class="metric-sub">Indicativo actual</span>
                         </div>
                     </div>
@@ -122,7 +122,7 @@
                         <div class="metric-icon text-warning">✓</div>
                         <div class="metric-info">
                             <span class="metric-label">ESTADO</span>
-                            <span class="metric-value text-danger">Fuera de servicio</span>
+                            <span class="metric-value text-danger" id="display-estado">Fuera de servicio</span>
                             <span class="metric-sub">Disponibilidad operativa</span>
                         </div>
                     </div>
@@ -130,7 +130,7 @@
                         <div class="metric-icon text-info">!</div>
                         <div class="metric-info">
                             <span class="metric-label">INCIDENCIAS</span>
-                            <span class="metric-value">0</span>
+                            <span class="metric-value" id="display-incidencias-count">0</span>
                             <span class="metric-sub">Registradas en sesión</span>
                         </div>
                     </div>
@@ -139,12 +139,12 @@
                 <!-- Filtro por Servicio Activo -->
                 <div class="service-filters">
                     <span class="filter-label">SERVICIO ACTIVO:</span>
-                    <div class="filter-buttons">
-                        <button class="btn-service active">POL <span>Policial</span></button>
-                        <button class="btn-service">BOM <span>Bomberos</span></button>
-                        <button class="btn-service">SAN <span>Sanitario</span></button>
-                        <button class="btn-service">CAR <span>Carreteras</span></button>
-                        <button class="btn-service">112 <span>Operador</span></button>
+                    <div class="filter-buttons" id="service-selector">
+                        <button class="btn-service active" data-service="POL">POL <span>Policial</span></button>
+                        <button class="btn-service" data-service="BOM">BOM <span>Bomberos</span></button>
+                        <button class="btn-service" data-service="SAN">SAN <span>Sanitario</span></button>
+                        <button class="btn-service" data-service="CAR">CAR <span>Carreteras</span></button>
+                        <button class="btn-service" data-service="112">112 <span>Operador</span></button>
                     </div>
                 </div>
             </section>
@@ -163,11 +163,11 @@
                     </div>
 
                     <label class="section-label">Estado Operativo</label>
-                    <div class="status-buttons-grid">
-                        <button class="btn-status status-108">10-8 Disponible</button>
-                        <button class="btn-status status-1023">10-23 En Camino</button>
-                        <button class="btn-status status-1097">10-97 En Escena</button>
-                        <button class="btn-status status-1010 active">10-10 Fuera de Servicio</button>
+                    <div class="status-buttons-grid" id="status-selector">
+                        <button class="btn-status status-108" data-code="10-8" data-label="Disponible" data-color="text-success">10-8 Disponible</button>
+                        <button class="btn-status status-1023" data-code="10-23" data-label="En Camino" data-color="text-info">10-23 En Camino</button>
+                        <button class="btn-status status-1097" data-code="10-97" data-label="En Escena" data-color="text-warning">10-97 En Escena</button>
+                        <button class="btn-status status-1010 active" data-code="10-10" data-label="Fuera de Servicio" data-color="text-danger">10-10 Fuera de Servicio</button>
                     </div>
                 </section>
 
@@ -176,7 +176,7 @@
                     <div class="card-header">
                         <h3>Crear Registro / Alerta 112</h3>
                     </div>
-                    <form class="alert-form" onsubmit="event.preventDefault();">
+                    <form class="alert-form" id="alert-form">
                         <div class="form-group">
                             <label for="tipo-incidencia">Tipo de Emergencia / Incidencia</label>
                             <select id="tipo-incidencia">
@@ -189,11 +189,11 @@
                         </div>
                         <div class="form-group">
                             <label for="ubicacion">Ubicación / Zona</label>
-                            <input type="text" id="ubicacion" placeholder="Ej: Carretera Principal frente a N-332">
+                            <input type="text" id="ubicacion" placeholder="Ej: Carretera Principal frente a N-332" required>
                         </div>
                         <div class="form-group">
                             <label for="detalles">Detalles del Incidente</label>
-                            <textarea id="detalles" rows="3" placeholder="Descripción de los hechos y unidades requeridas..."></textarea>
+                            <textarea id="detalles" rows="3" placeholder="Descripción de los hechos y unidades requeridas..." required></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary btn-block">Enviar Registro al Sistema</button>
                     </form>
@@ -204,5 +204,7 @@
         </main>
     </div>
 
+    <!-- Carga del JS Interactivo -->
+    <script src="app.js"></script>
 </body>
 </html>
